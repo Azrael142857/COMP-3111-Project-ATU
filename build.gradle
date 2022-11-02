@@ -29,6 +29,9 @@ dependencies {
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
+    
+    // Use OpenCSV for CSV Loading
+    implementation group: 'com.opencsv', name: 'opencsv', version: '5.7.1'
 }
 
 javafx {
