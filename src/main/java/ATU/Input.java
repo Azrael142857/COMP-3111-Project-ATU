@@ -1,6 +1,7 @@
 package ATU;
 
 import java.io.*;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -22,30 +23,31 @@ import javafx.util.Callback;
 import com.opencsv.CSVReader;
 
 public class Input {
-	private TableView <Person> person_table = new TableView <Person> ();
-	private TableView <Statistics> stat_table = new TableView <Statistics> ();
-	private ObservableList <Person> person_data = FXCollections.observableArrayList();
-	private ObservableList <Statistics> stat_data = FXCollections.observableArrayList();
-	
+	private ObservableList <Person> person_data = null;
+	private ObservableList <Statistics> stat_data = null;
+
 	// Read CSV file, return false if the file is invalid
-	private boolean load_input(File file) {
+	public boolean load_input(File file) {
 		CSVReader reader = null;
+		person_data = FXCollections.observableArrayList();
 		try {
 			reader = new CSVReader(new FileReader(file));
 			String[] line = reader.readNext();
-			while ((line = reader.readNext()) != null)
+			while ((line = reader.readNext()) != null) {
+				if (line.length != 9) return false;
 				person_data.add(new Person(line[0], line[1], line[2], 
 										   line[3], line[4], line[5], 
 										   line[6], line[7], line[8]));
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			return false;
 		}
 		return true;
 	}
 	
 	// Validate data, return false if the data is invalid
-	private boolean validate_data() {
+	public boolean validate_data() {
 		try {
 			boolean[] mrk = new boolean[1000000];	// Record existing IDs
 			for (Person student : person_data) {
@@ -83,19 +85,20 @@ public class Input {
 				if (concerns.length() > 200) return false;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			return false;
 		}
 		return true;
 	}
 
 	// Calculate statistics
-	private void generate_statistics() {
+	public void generate_statistics() {
 		int total_num = 0;
 		int k1sum = 0, k1min = 100, k1max = 0;
 		int k2sum = 0, k2min = 100, k2max = 0;
 		int k3tick1_cnt = 0, k3tick2_cnt = 0;
 		int mypreference_cnt = 0;
+		stat_data = FXCollections.observableArrayList();
 		for (Person student : person_data) {
 			// Transform integer properties
 			int k1 = Integer.valueOf(student.getK1energy());
@@ -128,7 +131,7 @@ public class Input {
 	}
 
 	// Display tables of student info and statistics
-	private void display_results() {
+	public void display_results() {
 		// Create table for student info
 		Stage stage_person = new Stage();
 		Scene scene_person = new Scene(new Group());
@@ -136,9 +139,10 @@ public class Input {
 		stage_person.setWidth(1140);
 		stage_person.setHeight(480);
 		stage_person.setResizable(false);
-
+		
 		final Label label_person = new Label("Person");
 		label_person.setFont(new Font("Arial", 20));
+		TableView <Person> person_table = new TableView <Person> ();
 		person_table.setEditable(false);
 
 		// Create student info table columns
@@ -208,8 +212,8 @@ public class Input {
 		stage_person.show();
 		
 		// Create table for statistics
-		Stage stage_stat = new Stage();
-		Scene scene_stat = new Scene(new Group());
+		final Stage stage_stat = new Stage();
+		final Scene scene_stat = new Scene(new Group());
 		stage_stat.setTitle("Table of statistics data");
 		stage_stat.setWidth(450);
 		stage_stat.setHeight(500);
@@ -217,6 +221,7 @@ public class Input {
 
 		final Label label_stat = new Label("Statistics");
 		label_stat.setFont(new Font("Arial", 20));
+		TableView <Statistics> stat_table = new TableView <Statistics> ();
 		stat_table.setEditable(false);
 
 		// Create statistics table columns
@@ -250,7 +255,7 @@ public class Input {
 	}
 
 	// Prompt window showing error message
-	private void display_error(int type) {
+	public void display_error(int type) {
 		Stage stage_error = new Stage();
 		Scene scene_error = new Scene(new Group());
 		stage_error.setTitle("Error Message");
@@ -280,21 +285,26 @@ public class Input {
 	// Read CSV and generate statistics, return false if file/info is invalid
 	public boolean launch() {
 		// JavaFX FileChooser for showing file dialog
-		final FileChooser fc = new FileChooser();
-		fc.setTitle("Browse Student Info CSV...");
-		String current_dir = System.getProperty("user.dir");
-		fc.setInitialDirectory(new File(current_dir));
-		fc.getExtensionFilters().addAll(new ExtensionFilter("CSV Files", "*.csv"));
-		File file = fc.showOpenDialog(null);
-		if (file != null) {		// Ensures file exists
-			if (load_input(file)) {		// Ensures valid CSV file
-				if (validate_data()) {		// Ensures valid student info
-					generate_statistics();
-					display_results();
-					return true;
-				} else display_error(2);
-			} else display_error(1);
-		} else display_error(0);
+		FileChooser fc = null;
+		try {
+			fc = new FileChooser();
+			fc.setTitle("Browse Student Info CSV...");
+			String current_dir = System.getProperty("user.dir");
+			fc.setInitialDirectory(new File(current_dir));
+			fc.getExtensionFilters().addAll(new ExtensionFilter("CSV Files", "*.csv"));
+			File file = fc.showOpenDialog(null);
+			if (file != null) {		// Ensures file exists
+				if (load_input(file)) {		// Ensures valid CSV file
+					if (validate_data()) {		// Ensures valid student info
+						generate_statistics();
+						display_results();
+						return true;
+					} else display_error(2);
+				} else display_error(1);
+			} else display_error(0);
+		} catch (Exception e) {
+			return false;
+		}
 		return false;
 	}
 	
