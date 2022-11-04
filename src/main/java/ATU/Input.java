@@ -303,8 +303,22 @@ public class Input {
 				} else display_error(1);
 			} else display_error(0);
 		} catch (Exception e) {
+			//e.printStackTrace();
 			return false;
 		}
+		return false;
+	}
+	
+	public boolean launch(File file) {
+		if (file != null) {	
+			if (load_input(file)) {
+				if (validate_data()) {
+					generate_statistics();
+					display_results();
+					return true;
+				} else display_error(2);
+			} else display_error(1);
+		} else display_error(0);
 		return false;
 	}
 	

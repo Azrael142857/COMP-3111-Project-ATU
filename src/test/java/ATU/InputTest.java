@@ -1,10 +1,11 @@
 package ATU;
 
-import java.io.File;
-
 import org.junit.Test;
 import org.junit.Before;
 import static org.junit.Assert.*;
+import java.io.File;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
 
 public class InputTest {
 	File[] valid = null;
@@ -45,14 +46,23 @@ public class InputTest {
 	}
 	
 	@Test public void testBasicFlow() {
-		Input input_handler = new Input();
-		input_handler.launch();
-		if (valid != null)
-			for (File file : valid) {
-				input_handler.load_input(file);
-				input_handler.validate_data();
-				input_handler.generate_statistics();
-				//input_handler.display_results();
-			}
+		try {
+			Input input_handler = new Input();
+			input_handler.launch();
+			Thread thread = new Thread(new Runnable() {
+				@Override public void run() {
+					new JFXPanel();
+					Platform.runLater(new Runnable() {
+						@Override public void run() {
+							assertTrue(input_handler.launch(new File("StuPI.CSV")));
+						}
+					});
+				}
+			});
+			thread.start();
+			Thread.sleep(3000);
+		} catch (Exception e) {
+			//e.printStackTrace();
+		}
 	}
 }
