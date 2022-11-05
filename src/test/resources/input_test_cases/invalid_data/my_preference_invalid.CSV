@@ -1,7 +1,7 @@
 stu_id,stu_name,email,k1_energy,k2_energy,k3_tick1,k3_tick2,my_pref,concerns
-21004488,"SAFFRON, Corgipoo","CorgipooSAF@connect.ust.hk",26,80,0,0,0,""
-20023331,"HYSSOP, Chamois","ChamoisHYS@connect.ust.hk",27,85,0,0,0,""
-20043679,"LEEKS, Beetle","BeetleLEE@connect.ust.hk",-1,40,0,0,0,""
+20004488,"SAFFRON, Corgipoo","CorgipooSAF@connect.ust.hk",26,80,0,0,0,""
+20023331,"HYSSOP, Chamois","ChamoisHYS@connect.ust.hk",27,85,0,0,2,""
+20043679,"LEEKS, Beetle","BeetleLEE@connect.ust.hk",71,40,0,0,0,""
 20067232,"CHRYSANTHEMUM, Abelisaurus","AbelisaurusCHR@connect.ust.hk",57,60,0,0,1,""
 20076931,"CELERIAC, Aniu","AniuCEL@connect.ust.hk",54,80,0,0,0,""
 20089887,"ANGELICA, Daisy","DaisyANG@connect.ust.hk",44,65,1,1,0,""
