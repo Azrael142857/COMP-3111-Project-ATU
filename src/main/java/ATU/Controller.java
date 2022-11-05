@@ -1,7 +1,5 @@
 package ATU;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -14,29 +12,37 @@ public class Controller {
 	@FXML private Button button_report;
 	@FXML private TextField textField;
 	
-	private boolean flag = false;	// flag: 0/1, whether data is successfully loaded
+	private InputHandler input_handler = null;
 	
-	// Lists for student info and statistics
-	private ObservableList <Person> person_data = FXCollections.observableArrayList();
-	private ObservableList <Statistics> stat_data = FXCollections.observableArrayList();
-	
-	@FXML void inputPressed(ActionEvent event) {
-		Input input_handler = new Input();
-		if (input_handler.launch()) {
-			person_data = input_handler.getPersondata();
-			stat_data = input_handler.getStatdata();
-			flag = true;
-		}
-    }
-    
-	@FXML void processPressed(ActionEvent event) {
-		for (Person person : person_data)
-			System.out.println(person.getStudentname());
-		for (Statistics stat : stat_data)
-			System.out.println(stat.getValue());
+	@FXML public void initialize() {
+		button_process.setDisable(true);
+		button_inquiry.setDisable(true);
+		button_report.setDisable(true);
+		textField.setDisable(true);
 	}
 	
-	@FXML void inquiryPressed(ActionEvent event) {
+	@FXML public void inputPressed(ActionEvent event) {
+		button_process.setDisable(true);
+		button_inquiry.setDisable(true);
+		button_report.setDisable(true);
+		textField.setDisable(true);
+		if (input_handler == null)
+			input_handler = new InputHandler();
+		if (input_handler.launch(null))
+			button_process.setDisable(false);
+    }
+    
+	@FXML public void processPressed(ActionEvent event) {
+		for (Person person : input_handler.getPersondata())
+			System.out.println(person.getStudentname());
+		for (Statistics stat : input_handler.getStatdata())
+			System.out.println(stat.getValue());
+		button_inquiry.setDisable(false);
+		button_report.setDisable(false);
+		textField.setDisable(false);
+	}
+	
+	@FXML public void inquiryPressed(ActionEvent event) {
 		String key = textField.getText();
 	}
 	
