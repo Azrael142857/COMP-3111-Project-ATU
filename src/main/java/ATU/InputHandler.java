@@ -22,7 +22,9 @@ import javafx.util.Callback;
 
 import com.opencsv.CSVReader;
 
-public class Input {
+public class InputHandler {
+	private Stage stage_person = null;
+	private Stage stage_stat = null;
 	private ObservableList <Person> person_data = null;
 	private ObservableList <Statistics> stat_data = null;
 
@@ -119,8 +121,8 @@ public class Input {
 			if (mypreference == 1) mypreference_cnt++;
 		}
 		// Group k1 & k2 statistics as string tuples
-		String k1stat = "("+1.0*k1sum/total_num+", "+k1min+", "+k1max+")";
-		String k2stat = "("+1.0*k2sum/total_num+", "+k2min+", "+k2max+")";
+		String k1stat = "("+String.format("%.2f", 1.0*k1sum/total_num)+", "+k1min+", "+k1max+")";
+		String k2stat = "("+String.format("%.2f", 1.0*k2sum/total_num)+", "+k2min+", "+k2max+")";
 		// Add statistics to list
 		stat_data.add(new Statistics("Total Number of Students", Integer.toString(total_num)));
 		stat_data.add(new Statistics("K1_Energy(Average, Min, Max)", k1stat));
@@ -131,17 +133,19 @@ public class Input {
 	}
 
 	// Display tables of student info and statistics
-	public void display_results() {
+	public void display_results(String path) {
 		// Create table for student info
-		Stage stage_person = new Stage();
-		Scene scene_person = new Scene(new Group());
+		if (stage_person == null) stage_person = new Stage();
+		final Scene scene_person = new Scene(new Group());
 		stage_person.setTitle("Table of students' personal data");
 		stage_person.setWidth(1140);
-		stage_person.setHeight(480);
+		stage_person.setHeight(520);
 		stage_person.setResizable(false);
 		
 		final Label label_person = new Label("Person");
-		label_person.setFont(new Font("Arial", 20));
+		label_person.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+		final Label label_path = new Label("(Source: "+path+")");
+		label_path.setFont(Font.font("Arial", FontWeight.BOLD, 16));
 		TableView <Person> person_table = new TableView <Person> ();
 		person_table.setEditable(false);
 
@@ -206,13 +210,13 @@ public class Input {
 		final VBox vbox_person = new VBox();
 		vbox_person.setSpacing(5);
 		vbox_person.setPadding(new Insets(10, 0, 0, 10));
-		vbox_person.getChildren().addAll(label_person, person_table);
+		vbox_person.getChildren().addAll(label_person, label_path, person_table);
 		((Group)scene_person.getRoot()).getChildren().addAll(vbox_person);
 		stage_person.setScene(scene_person);
 		stage_person.show();
 		
 		// Create table for statistics
-		final Stage stage_stat = new Stage();
+		if (stage_stat == null) stage_stat = new Stage();
 		final Scene scene_stat = new Scene(new Group());
 		stage_stat.setTitle("Table of statistics data");
 		stage_stat.setWidth(450);
@@ -220,7 +224,7 @@ public class Input {
 		stage_stat.setResizable(false);
 
 		final Label label_stat = new Label("Statistics");
-		label_stat.setFont(new Font("Arial", 20));
+		label_stat.setFont(Font.font("Arial", FontWeight.BOLD, 24));
 		TableView <Statistics> stat_table = new TableView <Statistics> ();
 		stat_table.setEditable(false);
 
@@ -256,6 +260,8 @@ public class Input {
 
 	// Prompt window showing error message
 	public void display_error(int type) {
+		if (type != 0 && type != 1 && type != 2) return;
+		
 		Stage stage_error = new Stage();
 		Scene scene_error = new Scene(new Group());
 		stage_error.setTitle("Error Message");
@@ -283,38 +289,27 @@ public class Input {
 	}
 	
 	// Read CSV and generate statistics, return false if file/info is invalid
-	public boolean launch() {
-		// JavaFX FileChooser for showing file dialog
-		FileChooser fc = null;
-		try {
-			fc = new FileChooser();
-			fc.setTitle("Browse Student Info CSV...");
-			String current_dir = System.getProperty("user.dir");
-			fc.setInitialDirectory(new File(current_dir));
-			fc.getExtensionFilters().addAll(new ExtensionFilter("CSV Files", "*.csv"));
-			File file = fc.showOpenDialog(null);
-			if (file != null) {		// Ensures file exists
-				if (load_input(file)) {		// Ensures valid CSV file
-					if (validate_data()) {		// Ensures valid student info
-						generate_statistics();
-						display_results();
-						return true;
-					} else display_error(2);
-				} else display_error(1);
-			} else display_error(0);
-		} catch (Exception e) {
-			//e.printStackTrace();
-			return false;
-		}
-		return false;
-	}
-	
 	public boolean launch(File file) {
-		if (file != null) {	
-			if (load_input(file)) {
-				if (validate_data()) {
+		if (stage_person != null) stage_person.hide();
+		if (stage_stat != null) stage_stat.hide();
+		FileChooser fc = null;	// JavaFX FileChooser for showing file dialog
+		if (file == null)	// If no file is passed, show file chooser
+			try {
+				fc = new FileChooser();
+				fc.setTitle("Browse Student Info CSV...");
+				String current_dir = System.getProperty("user.dir");
+				fc.setInitialDirectory(new File(current_dir));
+				fc.getExtensionFilters().addAll(new ExtensionFilter("CSV Files", "*.csv"));
+				file = fc.showOpenDialog(null);
+			} catch (Exception e) {
+				//e.printStackTrace();
+				return false;
+			}
+		if (file != null) {		// Ensures file exists
+			if (load_input(file)) {		// Ensures valid CSV file
+				if (validate_data()) {		// Ensures valid student info
 					generate_statistics();
-					display_results();
+					display_results(file.getPath());
 					return true;
 				} else display_error(2);
 			} else display_error(1);
@@ -323,8 +318,8 @@ public class Input {
 	}
 	
 	// Return students' info and statistics
-	ObservableList <Person> getPersondata() { return person_data; }
-	ObservableList <Statistics> getStatdata() { return stat_data; }
+	public ObservableList <Person> getPersondata() { return person_data; }
+	public ObservableList <Statistics> getStatdata() { return stat_data; }
 
 	// Helper class for creating row index
 	public class RowIndexCellFactory <S, T> implements Callback <TableColumn <S, T>, TableCell <S, T>> {

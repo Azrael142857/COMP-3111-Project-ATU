@@ -1,10 +1,11 @@
 package ATU;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
 import javafx.stage.Stage;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
+
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 public class UIApplicationTest {
 	@Test public void testBasicFlow() {
