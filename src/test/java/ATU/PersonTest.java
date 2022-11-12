@@ -33,15 +33,20 @@ public class PersonTest {
 
 		// Test K1Energy Helper
 		assertEquals(person.getK1energy(), "40");
+		assertEquals(person.getIntegerK1energy(), 40);
 		person.setK1energy("test");
 		assertNotEquals(person.getK1energy(), "40");
 		assertEquals(person.getK1energy(), "test");
+		person.setK1energy("7");
+		assertEquals(person.getIntegerK1energy(), 7);
 
 		// Test K2Energy Helper
 		assertEquals(person.getK2energy(), "65");
+		assertEquals(person.getIntegerK2energy(), 65);
 		person.setK2energy("99");
 		assertNotEquals(person.getK2energy(), "65");
 		assertEquals(person.getK2energy(), "99");
+		assertEquals(person.getIntegerK2energy(), 99);
 
 		// Test K3tick1 Helper
 		assertEquals(person.getK3tick1(), "1");
@@ -66,5 +71,12 @@ public class PersonTest {
 		person.setConcerns("test");
 		assertNotEquals(person.getConcerns(), "I use Macintosh.");
 		assertEquals(person.getConcerns(), "test");
+		
+		// Test GroupNumber Helper
+		assertEquals(person.getGroupNumber(), "-1");
+		assertEquals(person.getIntegerGroupNumber(), -1);
+		person.setGroupNumber("7");
+		assertEquals(person.getGroupNumber(), "7");
+		assertEquals(person.getIntegerGroupNumber(), 7);
 	}
 }

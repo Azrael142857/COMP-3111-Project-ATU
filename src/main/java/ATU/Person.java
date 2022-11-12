@@ -15,6 +15,7 @@ public class Person {
 	private final SimpleStringProperty k3tick2;
 	private final SimpleStringProperty mypreference;
 	private final SimpleStringProperty concerns;
+	private final SimpleStringProperty groupNumber; //value this property should be "-1" before running ATU Engine
 
 	public Person(String student_id, String student_name, String student_email, 
 				   String k1_energy, String k2_energy, String k3_tick1, 
@@ -28,6 +29,7 @@ public class Person {
 		this.k3tick2 = new SimpleStringProperty(k3_tick2);
 		this.mypreference = new SimpleStringProperty(my_preference);
 		this.concerns = new SimpleStringProperty(concerns);
+		this.groupNumber = new SimpleStringProperty("-1");
 	}
 
 	// Helper functions (set/get) to alter/access data
@@ -41,9 +43,11 @@ public class Person {
 	public void setStudentemail(String val) { studentemail.set(val); }
 
 	public String getK1energy() { return k1energy.get(); }
+	public int getIntegerK1energy() { return Integer.valueOf( k1energy.get() ); }
 	public void setK1energy(String val) { k1energy.set(val); }
 
 	public String getK2energy() { return k2energy.get(); }
+	public int getIntegerK2energy() { return Integer.valueOf( k2energy.get() ); }
 	public void setK2energy(String val) { k2energy.set(val); }
 
 	public String getK3tick1() { return k3tick1.get(); }
@@ -57,4 +61,8 @@ public class Person {
 
 	public String getConcerns() { return concerns.get(); }
 	public void setConcerns(String val) { concerns.set(val); }
+	
+	public String getGroupNumber() { return groupNumber.get(); }
+	public int getIntegerGroupNumber() { return Integer.valueOf( groupNumber.get() ); }
+	public void setGroupNumber(String val) { groupNumber.set(val); }
 }
