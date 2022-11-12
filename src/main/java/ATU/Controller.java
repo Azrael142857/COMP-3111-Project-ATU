@@ -13,6 +13,7 @@ public class Controller {
 	@FXML private TextField textField;
 	
 	private InputHandler input_handler = null;
+	private ATUEngine process_handler = null;
 	
 	@FXML public void initialize() {
 		button_process.setDisable(true);
@@ -33,13 +34,21 @@ public class Controller {
     }
     
 	@FXML public void processPressed(ActionEvent event) {
+		
+		//check if CSV data has imported
+		if(input_handler==null) new ATUEngine (null, null).display(0, "Input data before running ATU Engine!");
+			
+		process_handler = new ATUEngine(input_handler.getPersondata(), input_handler.getStatdata());
+		if( process_handler.launch() ) {
+			button_inquiry.setDisable(false);
+			button_report.setDisable(false);
+			textField.setDisable(false);
+		}
+		
+		System.out.println("-------------");
 		for (Person person : input_handler.getPersondata())
-			System.out.println(person.getStudentname());
-		for (Statistics stat : input_handler.getStatdata())
-			System.out.println(stat.getValue());
-		button_inquiry.setDisable(false);
-		button_report.setDisable(false);
-		textField.setDisable(false);
+			System.out.println(person.getStudentid()+" -- "+person.getGroupNumber());
+		System.out.println("-------------");
 	}
 	
 	@FXML public void inquiryPressed(ActionEvent event) {
