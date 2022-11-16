@@ -27,16 +27,16 @@ public class Controller {
 	}
 	
 	@FXML public void inputPressed(ActionEvent event) {
+		// Disable other buttons and windows
 		button_process.setDisable(true);
 		button_inquiry.setDisable(true);
 		button_report.setDisable(true);
 		textField.setDisable(true);
 		if (report_handler != null) report_handler.hideReport();
+
 		if (input_handler == null)
 			input_handler = new InputHandler();
-//		if (input_handler.launch(null))
-//			button_process.setDisable(false);
-		if (input_handler.launch(new File("StuPi.csv")))
+		if (input_handler.launch(null))
 			button_process.setDisable(false);
     }
     
@@ -64,6 +64,7 @@ public class Controller {
 		if(input_handler==null) new InquiryHandler (null, null).display(0, "Input data before making inquiries!");
 		inquiry_handler = new InquiryHandler(input_handler.getPersondata(), key);
 		inquiry_handler.launch();
+		textField.clear();
 	}
 	
 	
