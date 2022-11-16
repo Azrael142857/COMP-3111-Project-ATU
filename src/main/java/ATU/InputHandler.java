@@ -1,7 +1,7 @@
 package ATU;
 
 import java.io.*;
-
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -138,7 +138,7 @@ public class InputHandler {
 		if (stage_person == null) stage_person = new Stage();
 		final Scene scene_person = new Scene(new Group());
 		stage_person.setTitle("Table of students' personal data");
-		stage_person.setWidth(1140);
+		stage_person.setWidth(1220);
 		stage_person.setHeight(520);
 		stage_person.setResizable(false);
 		
@@ -197,13 +197,19 @@ public class InputHandler {
 		concerns_column.setMinWidth(100);
 		concerns_column.setCellValueFactory(new PropertyValueFactory <Person, String> ("concerns"));
 
+		TableColumn <Person, String> groupnumber_column = new TableColumn <Person, String> ("Team");
+		groupnumber_column.setMinWidth(60);
+		groupnumber_column.setStyle("-fx-alignment: CENTER;");
+		groupnumber_column.setCellValueFactory(new PropertyValueFactory <Person, String> ("groupNumber"));
+
 		// Merge all columns into the table
 		person_table.setItems(person_data);
 		person_table.getColumns().addAll(person_index_column, studentid_column, 
 										 studentname_column, studentemail_column, 
 										 k1energy_column, k2energy_column,
 										 k3tick1_column, k3tick2_column, 
-										 mypreference_column, concerns_column);
+										 mypreference_column, concerns_column, 
+										 groupnumber_column);
 		person_table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
 		// Set scene for the table
@@ -230,15 +236,18 @@ public class InputHandler {
 
 		// Create statistics table columns
 		TableColumn <Statistics, String> stat_index_column = new TableColumn <Statistics, String> ("Row_Index");
+		stat_index_column.setSortable(false);
 		stat_index_column.setMinWidth(80);
 		stat_index_column.setStyle("-fx-alignment: CENTER;");
 		stat_index_column.setCellFactory(new RowIndexCellFactory <Statistics, String> ());
 		
 		TableColumn <Statistics, String> entry_column = new TableColumn <Statistics, String> ("Entry");
+		entry_column.setSortable(false);
 		entry_column.setMinWidth(200);
 		entry_column.setCellValueFactory(new PropertyValueFactory <Statistics, String> ("entry"));
 
 		TableColumn <Statistics, String> value_column = new TableColumn <Statistics, String> ("Value");
+		value_column.setSortable(false);
 		value_column.setMinWidth(130);
 		value_column.setStyle("-fx-alignment: CENTER-RIGHT;");
 		value_column.setCellValueFactory(new PropertyValueFactory <Statistics, String> ("value"));
@@ -267,6 +276,7 @@ public class InputHandler {
 		stage_error.setTitle("Error Message");
 		stage_error.setWidth(400);
 		stage_error.setHeight(80);
+		stage_error.setResizable(false);
 		
 		final Label label_error = new Label();
 		if (type == 0)
