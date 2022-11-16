@@ -57,7 +57,7 @@ public class ATUEngine {
 		person_data.sort(Comparator.comparing( Person::getIntegerK2energy ) );
 		team_id = 1;
 		for(Person person : person_data) {
-			if( person.getGroupNumber()!="-1" ) continue;
+			if( person.getGroupNumber()!="N/A" ) continue;
 			
 			person.setGroupNumber(Integer.toString(team_id));
 			team_id++;
@@ -66,7 +66,7 @@ public class ATUEngine {
 		
 		team_id = 1;
 		for(Person person : person_data) {
-			if( person.getGroupNumber()!="-1" ) continue;
+			if( person.getGroupNumber()!="N/A" ) continue;
 			
 			person.setGroupNumber(Integer.toString(team_id));
 			team_id++;
@@ -102,6 +102,7 @@ public class ATUEngine {
 		if(type==2) stage_error.setTitle("Notice");
 		stage_error.setWidth(400);
 		stage_error.setHeight(80);
+		stage_error.setResizable(false);
 		
 		final Label label_error = new Label();
 		label_error.setText(message);

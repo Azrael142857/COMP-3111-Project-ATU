@@ -57,6 +57,7 @@ public class ReportHandler {
 	//generate and display report on each team's average energy
 	public void DisplayReport() {
 		if (stage_report == null) {stage_report = new Stage();}
+		stage_report.hide();
 		
 		NumberAxis xAxis = new NumberAxis(1, num_teams, 2); 
 	    xAxis.setLabel("Team"); 
@@ -89,7 +90,7 @@ public class ReportHandler {
 	    Group root = new Group(linechart); 
 	         
 	    //Creating a scene object 
-	    Scene scene = new Scene(root, 600, 400);  
+	    Scene scene = new Scene(root, 500, 400);  
 	      
 	    stage_report.setResizable(false);
 	    
@@ -101,5 +102,17 @@ public class ReportHandler {
 		   
 	    //Displaying the contents of the stage 
 	    stage_report.show();
+	}
+	
+	// Helper function to hide report stage
+	public void hideReport() {
+		if (stage_report != null)
+			stage_report.hide();
+	}
+	
+	public boolean launch() {
+		CalculateTeamsInfo();
+		DisplayReport();
+		return true;
 	}
 }

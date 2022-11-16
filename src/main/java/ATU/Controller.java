@@ -1,5 +1,7 @@
 package ATU;
 
+import java.io.File;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -25,10 +27,13 @@ public class Controller {
 	}
 	
 	@FXML public void inputPressed(ActionEvent event) {
+		// Disable other buttons and windows
 		button_process.setDisable(true);
 		button_inquiry.setDisable(true);
 		button_report.setDisable(true);
 		textField.setDisable(true);
+		if (report_handler != null) report_handler.hideReport();
+
 		if (input_handler == null)
 			input_handler = new InputHandler();
 		if (input_handler.launch(null))
@@ -38,8 +43,8 @@ public class Controller {
 	@FXML public void processPressed(ActionEvent event) {
 		
 		//check if CSV data has imported
-		if(input_handler==null) new ATUEngine (null, null).display(0, "Input data before running ATU Engine!");
-			
+		if (input_handler==null) new ATUEngine (null, null).display(0, "Input data before running ATU Engine!");
+		if (report_handler != null) report_handler.hideReport();
 		process_handler = new ATUEngine(input_handler.getPersondata(), input_handler.getStatdata());
 		if( process_handler.launch() ) {
 			button_inquiry.setDisable(false);
@@ -57,19 +62,15 @@ public class Controller {
 		String key = textField.getText();
 		//check if CSV data has imported
 		if(input_handler==null) new InquiryHandler (null, null).display(0, "Input data before making inquiries!");
-					
 		inquiry_handler = new InquiryHandler(input_handler.getPersondata(), key);
 		inquiry_handler.launch();
-		
+		textField.clear();
 	}
 	
 	
-	@FXML void reportPressed(ActionEvent event) {					
+	@FXML void reportPressed(ActionEvent event) {
+		if (report_handler != null) report_handler.hideReport();
 		report_handler = new ReportHandler(input_handler.getPersondata());
-		report_handler.CalculateTeamsInfo();
-		report_handler.DisplayReport();
-		
-		
-		
+		report_handler.launch();
 	}
 }

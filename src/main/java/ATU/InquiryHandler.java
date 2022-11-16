@@ -1,10 +1,8 @@
 package ATU;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -110,6 +108,7 @@ public class InquiryHandler {
 		if(type==2) stage_error.setTitle("Notice");
 		stage_error.setWidth(400);
 		stage_error.setHeight(80);
+		stage_error.setResizable(false);
 		
 		final Label label_error = new Label();
 		label_error.setText(message);
@@ -132,33 +131,62 @@ public class InquiryHandler {
 		if (stage_team == null) stage_team = new Stage();
 		final Scene scene_team = new Scene(new Group());
 		stage_team.setTitle("Inquiry results");
-		stage_team.setWidth(800);
-		stage_team.setHeight(500);
+		stage_team.setWidth(1010);
+		stage_team.setHeight(210);
 		stage_team.setResizable(false);
 		
 		table.setEditable(false);
 		
-		final Label label = new Label("Your Inquiry results");
+		final Label label = new Label("Your Inquiry Results");
         label.setFont(new Font("Arial", 20));
 		
 		TableColumn<GroupingInfo, String> userInputCol = new TableColumn<GroupingInfo, String>("User Input");
-		TableColumn<GroupingInfo, String> studentIDCol = new TableColumn<GroupingInfo, String>("My Student ID");
-        TableColumn<GroupingInfo, String> studentNameCol = new TableColumn<GroupingInfo, String>("My Student Name");
+		TableColumn<GroupingInfo, String> studentIDCol = new TableColumn<GroupingInfo, String>("Student ID");
+        TableColumn<GroupingInfo, String> studentNameCol = new TableColumn<GroupingInfo, String>("Student Name");
         userInputCol.getColumns().addAll(studentIDCol, studentNameCol);
+        studentNameCol.setMinWidth(160);
+        studentNameCol.setStyle("-fx-alignment: CENTER;");
+        studentIDCol.setMinWidth(80);
+        studentIDCol.setStyle("-fx-alignment: CENTER;");
+        userInputCol.setSortable(false);
+        studentIDCol.setSortable(false);
+        studentNameCol.setSortable(false);
+
 		TableColumn<GroupingInfo, String> dataOutputCol = new TableColumn<GroupingInfo, String>("Data Output");
-        TableColumn<GroupingInfo, String> teamNumCol = new TableColumn<GroupingInfo, String>("My Team No.");
-        TableColumn<GroupingInfo, String> teammatesCol = new TableColumn<GroupingInfo, String>("My Teammates");
+        TableColumn<GroupingInfo, String> teamNumCol = new TableColumn<GroupingInfo, String>("Team No.");
+        TableColumn<GroupingInfo, String> teammatesCol = new TableColumn<GroupingInfo, String>("Teammates");
         TableColumn<GroupingInfo, String> teammates1Col = new TableColumn<GroupingInfo, String>("1");
         TableColumn<GroupingInfo, String> teammates2Col = new TableColumn<GroupingInfo, String>("2");
         TableColumn<GroupingInfo, String> teammates3Col = new TableColumn<GroupingInfo, String>("3");
         teammatesCol.getColumns().addAll(teammates1Col, teammates2Col, teammates3Col);
+        teamNumCol.setMinWidth(90);
+        teamNumCol.setStyle("-fx-alignment: CENTER;");
+        teammates1Col.setMinWidth(160);
+        teammates1Col.setStyle("-fx-alignment: CENTER;");
+        teammates2Col.setMinWidth(160);
+        teammates2Col.setStyle("-fx-alignment: CENTER;");
+        teammates3Col.setMinWidth(160);
+        teammates3Col.setStyle("-fx-alignment: CENTER;");
+        dataOutputCol.setSortable(false);
+        teamNumCol.setSortable(false);
+        teammatesCol.setSortable(false);
+        teammates1Col.setSortable(false);
+        teammates2Col.setSortable(false);
+        teammates3Col.setSortable(false);
+
         TableColumn<GroupingInfo, String> teamEnergyCol = new TableColumn<GroupingInfo, String>("Our Team Energy");
         TableColumn<GroupingInfo, String> teamK1Col = new TableColumn<GroupingInfo, String>("K1 Average");
         TableColumn<GroupingInfo, String> teamK2Col = new TableColumn<GroupingInfo, String>("K2 Average");
         teamEnergyCol.getColumns().addAll(teamK1Col, teamK2Col);
         dataOutputCol.getColumns().addAll(teamNumCol, teammatesCol, teamEnergyCol);
-       
-        
+        teamK1Col.setMinWidth(80);
+        teamK1Col.setStyle("-fx-alignment: CENTER;");
+        teamK2Col.setMinWidth(80);
+        teamK2Col.setStyle("-fx-alignment: CENTER;");
+        teamEnergyCol.setSortable(false);
+        teamK1Col.setSortable(false);
+        teamK2Col.setSortable(false);
+
         studentIDCol.setCellValueFactory(new PropertyValueFactory<GroupingInfo,String>("studentID"));
         studentNameCol.setCellValueFactory(new PropertyValueFactory<GroupingInfo,String>("myName"));
         teamNumCol.setCellValueFactory(new PropertyValueFactory<GroupingInfo,String>("teamNo"));
@@ -170,7 +198,9 @@ public class InquiryHandler {
 		
         table.setItems(grouping_data);
         table.getColumns().addAll(userInputCol, dataOutputCol);
-        
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        table.setFixedCellSize(25);
+        table.prefHeightProperty().bind(Bindings.size(table.getItems()).multiply(table.getFixedCellSize()).add(30*3));
         
         final VBox vbox = new VBox();
         vbox.setSpacing(5);

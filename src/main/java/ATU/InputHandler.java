@@ -1,7 +1,7 @@
 package ATU;
 
 import java.io.*;
-
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -22,13 +22,21 @@ import javafx.util.Callback;
 
 import com.opencsv.CSVReader;
 
+/**
+ * InputHandler: load input and generate statistics
+ * @author SHU Tian
+ */
 public class InputHandler {
 	private Stage stage_person = null;
 	private Stage stage_stat = null;
 	private ObservableList <Person> person_data = null;
 	private ObservableList <Statistics> stat_data = null;
 
-	// Read CSV file, return false if the file is invalid
+	/**
+	 * Read CSV file into person_data
+	 * @param file
+	 * @return boolean: if file is valid then True, otherwise False
+	 */
 	public boolean load_input(File file) {
 		CSVReader reader = null;
 		person_data = FXCollections.observableArrayList();
@@ -48,7 +56,10 @@ public class InputHandler {
 		return true;
 	}
 	
-	// Validate data, return false if the data is invalid
+	/**
+	 * Validate data by checking type and range
+	 * @return boolean: if the data is valid then True, otherwise False
+	 */
 	public boolean validate_data() {
 		try {
 			boolean[] mrk = new boolean[1000000];	// Record existing IDs
@@ -93,7 +104,9 @@ public class InputHandler {
 		return true;
 	}
 
-	// Calculate statistics
+	/**
+	 * Calculate statistics and store in stat_data
+	 */
 	public void generate_statistics() {
 		int total_num = 0;
 		int k1sum = 0, k1min = 100, k1max = 0;
@@ -132,13 +145,16 @@ public class InputHandler {
 		stat_data.add(new Statistics("My_Preference = 1", Integer.toString(mypreference_cnt)));
 	}
 
-	// Display tables of student info and statistics
+	/**
+	 * Display tables of student info and statistics
+	 * @param path: absolute path of the source CSV file
+	 */
 	public void display_results(String path) {
 		// Create table for student info
 		if (stage_person == null) stage_person = new Stage();
 		final Scene scene_person = new Scene(new Group());
 		stage_person.setTitle("Table of students' personal data");
-		stage_person.setWidth(1140);
+		stage_person.setWidth(1220);
 		stage_person.setHeight(520);
 		stage_person.setResizable(false);
 		
@@ -197,13 +213,19 @@ public class InputHandler {
 		concerns_column.setMinWidth(100);
 		concerns_column.setCellValueFactory(new PropertyValueFactory <Person, String> ("concerns"));
 
+		TableColumn <Person, String> groupnumber_column = new TableColumn <Person, String> ("Team");
+		groupnumber_column.setMinWidth(60);
+		groupnumber_column.setStyle("-fx-alignment: CENTER;");
+		groupnumber_column.setCellValueFactory(new PropertyValueFactory <Person, String> ("groupNumber"));
+
 		// Merge all columns into the table
 		person_table.setItems(person_data);
 		person_table.getColumns().addAll(person_index_column, studentid_column, 
 										 studentname_column, studentemail_column, 
 										 k1energy_column, k2energy_column,
 										 k3tick1_column, k3tick2_column, 
-										 mypreference_column, concerns_column);
+										 mypreference_column, concerns_column, 
+										 groupnumber_column);
 		person_table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
 		// Set scene for the table
@@ -230,15 +252,18 @@ public class InputHandler {
 
 		// Create statistics table columns
 		TableColumn <Statistics, String> stat_index_column = new TableColumn <Statistics, String> ("Row_Index");
+		stat_index_column.setSortable(false);
 		stat_index_column.setMinWidth(80);
 		stat_index_column.setStyle("-fx-alignment: CENTER;");
 		stat_index_column.setCellFactory(new RowIndexCellFactory <Statistics, String> ());
 		
 		TableColumn <Statistics, String> entry_column = new TableColumn <Statistics, String> ("Entry");
+		entry_column.setSortable(false);
 		entry_column.setMinWidth(200);
 		entry_column.setCellValueFactory(new PropertyValueFactory <Statistics, String> ("entry"));
 
 		TableColumn <Statistics, String> value_column = new TableColumn <Statistics, String> ("Value");
+		value_column.setSortable(false);
 		value_column.setMinWidth(130);
 		value_column.setStyle("-fx-alignment: CENTER-RIGHT;");
 		value_column.setCellValueFactory(new PropertyValueFactory <Statistics, String> ("value"));
@@ -258,7 +283,10 @@ public class InputHandler {
 		stage_stat.show();
 	}
 
-	// Prompt window showing error message
+	/**
+	 * Prompt window showing error message
+	 * @param type: type of the error
+	 */
 	public void display_error(int type) {
 		if (type != 0 && type != 1 && type != 2) return;
 		
@@ -267,6 +295,7 @@ public class InputHandler {
 		stage_error.setTitle("Error Message");
 		stage_error.setWidth(400);
 		stage_error.setHeight(80);
+		stage_error.setResizable(false);
 		
 		final Label label_error = new Label();
 		if (type == 0)
@@ -287,8 +316,13 @@ public class InputHandler {
 		stage_error.setScene(scene_error);
 		stage_error.show();
 	}
-	
-	// Read CSV and generate statistics, return false if file/info is invalid
+
+	/**
+	 * Read CSV and generate statistics
+	 * @param file: if not null, then open corresponding file; 
+	 * 				otherwise, prompt file dialog
+	 * @return boolean: if file/info is invalid, then False; otherwise, True
+	 */
 	public boolean launch(File file) {
 		if (stage_person != null) stage_person.hide();
 		if (stage_stat != null) stage_stat.hide();
@@ -316,12 +350,26 @@ public class InputHandler {
 		} else display_error(0);
 		return false;
 	}
-	
-	// Return students' info and statistics
+
+	/**
+	 * Helper function to return students' info
+	 * @return ObservableList person_data
+	 */
 	public ObservableList <Person> getPersondata() { return person_data; }
+
+	/**
+	 * Helper function to return students' statistics
+	 * @return ObservableList stat_data
+	 */
 	public ObservableList <Statistics> getStatdata() { return stat_data; }
 
-	// Helper class for creating row index
+	/**
+	 * Helper class for creating row index
+	 * @author SHU Tian
+	 *
+	 * @param <S> type of source object
+	 * @param <T> type of display object
+	 */
 	public class RowIndexCellFactory <S, T> implements Callback <TableColumn <S, T>, TableCell <S, T>> {
 		@Override public TableCell <S, T> call(TableColumn <S, T> param) {
 			TableCell <S, T> ret = new TableCell <S, T> () {

@@ -29,7 +29,7 @@ public class Person {
 		this.k3tick2 = new SimpleStringProperty(k3_tick2);
 		this.mypreference = new SimpleStringProperty(my_preference);
 		this.concerns = new SimpleStringProperty(concerns);
-		this.groupNumber = new SimpleStringProperty("-1");
+		this.groupNumber = new SimpleStringProperty("N/A");
 	}
 
 	// Helper functions (set/get) to alter/access data
@@ -63,6 +63,9 @@ public class Person {
 	public void setConcerns(String val) { concerns.set(val); }
 	
 	public String getGroupNumber() { return groupNumber.get(); }
-	public int getIntegerGroupNumber() { return Integer.valueOf( groupNumber.get() ); }
+	public int getIntegerGroupNumber() {
+		if (groupNumber.get().equals("N/A")) return -1;
+		return Integer.valueOf(groupNumber.get());
+	}
 	public void setGroupNumber(String val) { groupNumber.set(val); }
 }
