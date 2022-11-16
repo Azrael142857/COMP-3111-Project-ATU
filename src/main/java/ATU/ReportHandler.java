@@ -109,4 +109,10 @@ public class ReportHandler {
 		if (stage_report != null)
 			stage_report.hide();
 	}
+	
+	public boolean launch() {
+		CalculateTeamsInfo();
+		DisplayReport();
+		return true;
+	}
 }

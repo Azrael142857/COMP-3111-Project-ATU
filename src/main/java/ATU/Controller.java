@@ -71,7 +71,6 @@ public class Controller {
 	@FXML void reportPressed(ActionEvent event) {
 		if (report_handler != null) report_handler.hideReport();
 		report_handler = new ReportHandler(input_handler.getPersondata());
-		report_handler.CalculateTeamsInfo();
-		report_handler.DisplayReport();
+		report_handler.launch();
 	}
 }
