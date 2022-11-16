@@ -73,7 +73,7 @@ public class PersonTest {
 		assertEquals(person.getConcerns(), "test");
 		
 		// Test GroupNumber Helper
-		assertEquals(person.getGroupNumber(), "-1");
+		assertEquals(person.getGroupNumber(), "N/A");
 		assertEquals(person.getIntegerGroupNumber(), -1);
 		person.setGroupNumber("7");
 		assertEquals(person.getGroupNumber(), "7");
