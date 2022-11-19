@@ -41,7 +41,7 @@ public class Controller {
     }
     
 	@FXML public void processPressed(ActionEvent event) {
-		
+		button_process.setDisable(true);
 		//check if CSV data has imported
 		if (input_handler==null) new ATUEngine (null, null).display(0, "Input data before running ATU Engine!");
 		if (report_handler != null) report_handler.hideReport();
