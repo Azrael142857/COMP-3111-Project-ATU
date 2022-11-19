@@ -12,6 +12,7 @@ public class Team {
 	}
 	
 	public void calculateTeamInfo() {
+		if (num_members == 0) {return;}
 		k1Avg = k1Avg/num_members;
 		k2Avg = k2Avg/num_members;
 		energyAvg = (k1Avg+k2Avg)/2;
