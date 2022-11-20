@@ -12,20 +12,36 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
 import javafx.stage.Stage;
 
+/**
+* <h1>Report Handler</h1>
+* The ReportHandle class handles the call to produce a report
+* <p>
+* 
+*
+* @author  Yang Yuang
+* @version 1.0
+* @since   2022-11-20
+*/
+
 public class ReportHandler {
 	private ObservableList <Person> person_data = null;
 	private ObservableList <Team> team_data = null;
 	private Stage stage_report = null;
 	int num_teams;
 	
-	//Constructor, get person data list
+	/**
+	 * Constructor, get person data list
+	 * @param person_data the list of all student data
+	 */
 	public ReportHandler(ObservableList <Person> person_data) {
 		if (person_data != null) {
 			this.person_data = person_data;
 		}
 	}
 	
-	//construct all the teams and their information
+	/**
+	 * construct all the teams and their information
+	 */
 	public void CalculateTeamsInfo() {
 		this.team_data = FXCollections.observableArrayList();
 		int team_id = 0;
@@ -54,7 +70,9 @@ public class ReportHandler {
 		}
 	}
 	
-	//generate and display report on each team's average energy
+	/**
+	 * generate and display report on each team's average energy
+	 */
 	public void DisplayReport() {
 		if (stage_report == null) {stage_report = new Stage();}
 		stage_report.hide();
@@ -104,12 +122,17 @@ public class ReportHandler {
 	    stage_report.show();
 	}
 	
-	// Helper function to hide report stage
+	/**
+	 * Helper function to hide report stage
+	 */
 	public void hideReport() {
 		if (stage_report != null)
 			stage_report.hide();
 	}
-	
+	/**
+	 * launch the report handler
+	 * @return a boolean, always true when the run is successful
+	 */
 	public boolean launch() {
 		CalculateTeamsInfo();
 		DisplayReport();

@@ -61,7 +61,7 @@ public class Controller {
 	@FXML public void inquiryPressed(ActionEvent event) {
 		String key = textField.getText();
 		//check if CSV data has imported
-		if(input_handler==null) new InquiryHandler (null, null).display(0, "Input data before making inquiries!");
+		if(input_handler==null) new InquiryHandler (null, null).display("Input data before making inquiries!");
 		inquiry_handler = new InquiryHandler(input_handler.getPersondata(), key);
 		inquiry_handler.launch();
 		textField.clear();

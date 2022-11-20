@@ -17,6 +17,18 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
+/**
+* <h1>Inquiry Handler</h1>
+* The InquiryHandle class handles inquiries from students, 
+* and it takes studentID or student name as a key, 
+* and outputs his/her grouping information
+* <p>
+* 
+*
+* @author  Yang Yuang
+* @version 1.0
+* @since   2022-11-20
+*/
 public class InquiryHandler {
 	private ObservableList <Person> person_data = null;
 	private ObservableList <GroupingInfo> grouping_data = null;
@@ -28,12 +40,21 @@ public class InquiryHandler {
 	TableView<GroupingInfo> table;
 	
 	// Constructor: get the input data
+	/**
+	* This is the constructor for InquiryHandler
+	* @param person_data This is the list of all student data
+	* @param key This is the key for the inquiry, it can either be a name or student ID
+	* @return Nothing
+	*/
 	public InquiryHandler(ObservableList <Person> person_data, String key) {
 		this.person_data = person_data;
 		this.key = key;
 	}
 		
 	//find the student data using the key provided
+	/**
+	 * This method is used to find the single person entry with the key provided, inside the all the student data
+	 */
 	public void find_person() {
 		target = null;
 		for(Person person : person_data) {
@@ -43,11 +64,13 @@ public class InquiryHandler {
 			}
 		}
 		if (target == null) {
-			display(0, "ERROR: invalid student ID or name");
+			display("ERROR: invalid student ID or name");
 		}
 	}
 	
-	//find all the team information to be included in data output
+	/**
+	 * find all the team information to be included in data output
+	 */
 	public void find_team_info() {
 		String team_number = target.getGroupNumber();
 		List<String> members_names = new ArrayList<String>();
@@ -81,7 +104,10 @@ public class InquiryHandler {
 		}
 	}
 	
-	//Start the Inquiry
+	/**Start the Inquiry
+	 * 
+	 * @return a boolean, if can find the person and its team info, return true. Otherwise return false.
+	 */
 	public boolean launch() {
 		
 		//find the person data that is being queried
@@ -97,15 +123,15 @@ public class InquiryHandler {
 		return true;
 	}
 	
-	// Prompt window showing error message
-	public void display(int type, String message) {
-		if( type!=0 && type!=1 && type!=2 ) return; //0 for Error, 1 for Warning, 2 for notice
+	/**
+	 * Prompt window showing error message
+	 * @param message the message to be shown on the error window
+	 */
+	public void display(String message) {
 		
 		Stage stage_error = new Stage();
 		Scene scene_error = new Scene(new Group());
-		if(type==0) stage_error.setTitle("Error Message");
-		if(type==1) stage_error.setTitle("Warning Message");
-		if(type==2) stage_error.setTitle("Notice");
+		stage_error.setTitle("Error Message");
 		stage_error.setWidth(400);
 		stage_error.setHeight(80);
 		stage_error.setResizable(false);
@@ -125,6 +151,9 @@ public class InquiryHandler {
 		stage_error.show();
 	}
 	
+	/**
+	 * Display the grouping results for the inquiry
+	 */
 	public void display_results() {
 		
 		table = new TableView<GroupingInfo>();
