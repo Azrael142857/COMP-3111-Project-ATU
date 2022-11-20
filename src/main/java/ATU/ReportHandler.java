@@ -13,9 +13,7 @@ import javafx.scene.chart.XYChart.Series;
 import javafx.stage.Stage;
 
 /**
-* <h1>Report Handler</h1>
 * The ReportHandle class handles the call to produce a report
-* <p>
 * 
 *
 * @author  Yang Yuang

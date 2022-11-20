@@ -72,7 +72,7 @@ public class GroupingInfo {
 	public int getIntegerTeamNo() { return Integer.valueOf( teamNo.get() ); }
 	/**
      * helper function to set the team number
-     * @param string that indicates the team number
+     * @param val string that indicates the team number
      */
 	public void setTeamNo(String val) { teamNo.set(val); }
 

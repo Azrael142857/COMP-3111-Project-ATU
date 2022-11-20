@@ -18,11 +18,10 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 /**
-* <h1>Inquiry Handler</h1>
+* 
 * The InquiryHandle class handles inquiries from students, 
 * and it takes studentID or student name as a key, 
 * and outputs his/her grouping information
-* <p>
 * 
 *
 * @author  Yang Yuang
@@ -44,7 +43,6 @@ public class InquiryHandler {
 	* This is the constructor for InquiryHandler
 	* @param person_data This is the list of all student data
 	* @param key This is the key for the inquiry, it can either be a name or student ID
-	* @return Nothing
 	*/
 	public InquiryHandler(ObservableList <Person> person_data, String key) {
 		this.person_data = person_data;
