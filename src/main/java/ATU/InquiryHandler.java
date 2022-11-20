@@ -17,6 +17,17 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
+/**
+* 
+* The InquiryHandle class handles inquiries from students, 
+* and it takes studentID or student name as a key, 
+* and outputs his/her grouping information
+* 
+*
+* @author  Yang Yuang
+* @version 1.0
+* @since   2022-11-20
+*/
 public class InquiryHandler {
 	private ObservableList <Person> person_data = null;
 	private ObservableList <GroupingInfo> grouping_data = null;
@@ -28,12 +39,20 @@ public class InquiryHandler {
 	TableView<GroupingInfo> table;
 	
 	// Constructor: get the input data
+	/**
+	* This is the constructor for InquiryHandler
+	* @param person_data This is the list of all student data
+	* @param key This is the key for the inquiry, it can either be a name or student ID
+	*/
 	public InquiryHandler(ObservableList <Person> person_data, String key) {
 		this.person_data = person_data;
 		this.key = key;
 	}
 		
 	//find the student data using the key provided
+	/**
+	 * This method is used to find the single person entry with the key provided, inside the all the student data
+	 */
 	public void find_person() {
 		target = null;
 		for(Person person : person_data) {
@@ -47,7 +66,9 @@ public class InquiryHandler {
 		}
 	}
 	
-	//find all the team information to be included in data output
+	/**
+	 * find all the team information to be included in data output
+	 */
 	public void find_team_info() {
 		String team_number = target.getGroupNumber();
 		List<String> members_names = new ArrayList<String>();
@@ -81,7 +102,10 @@ public class InquiryHandler {
 		}
 	}
 	
-	//Start the Inquiry
+	/**Start the Inquiry
+	 * 
+	 * @return a boolean, if can find the person and its team info, return true. Otherwise return false.
+	 */
 	public boolean launch() {
 		
 		//find the person data that is being queried
@@ -98,7 +122,11 @@ public class InquiryHandler {
 		return false;
 	}
 	
-	// Prompt window showing error message
+
+	/**
+	 * Prompt window showing error message
+	 * @param message the message to be shown on the error window
+	 */
 	public void display(String message) {		
 		Stage stage_error = new Stage();
 		Scene scene_error = new Scene(new Group());
@@ -122,7 +150,12 @@ public class InquiryHandler {
 		stage_error.show();
 	}
 	
+
+	/**
+	 * Display the grouping results for the inquiry
+	 */
 	@SuppressWarnings("unchecked")
+
 	public void display_results() {
 		
 		table = new TableView<GroupingInfo>();
