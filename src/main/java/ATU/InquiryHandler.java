@@ -43,7 +43,7 @@ public class InquiryHandler {
 			}
 		}
 		if (target == null) {
-			display(0, "ERROR: invalid student ID or name");
+			display("ERROR: invalid student ID or name");
 		}
 	}
 	
@@ -92,20 +92,17 @@ public class InquiryHandler {
 			find_team_info();
 			//display team info in a new window
 			display_results();
+			return true;
 		}	
 		
-		return true;
+		return false;
 	}
 	
 	// Prompt window showing error message
-	public void display(int type, String message) {
-		if( type!=0 && type!=1 && type!=2 ) return; //0 for Error, 1 for Warning, 2 for notice
-		
+	public void display(String message) {		
 		Stage stage_error = new Stage();
 		Scene scene_error = new Scene(new Group());
-		if(type==0) stage_error.setTitle("Error Message");
-		if(type==1) stage_error.setTitle("Warning Message");
-		if(type==2) stage_error.setTitle("Notice");
+		stage_error.setTitle("Error Message");
 		stage_error.setWidth(400);
 		stage_error.setHeight(80);
 		stage_error.setResizable(false);
@@ -125,6 +122,7 @@ public class InquiryHandler {
 		stage_error.show();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void display_results() {
 		
 		table = new TableView<GroupingInfo>();
