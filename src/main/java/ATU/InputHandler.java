@@ -1,7 +1,6 @@
 package ATU;
 
 import java.io.*;
-import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -23,7 +22,7 @@ import javafx.util.Callback;
 import com.opencsv.CSVReader;
 
 /**
- * InputHandler: load input and generate statistics
+ * InputHandler: load input and generate statistics.
  * @author SHU Tian
  */
 public class InputHandler {
@@ -32,10 +31,12 @@ public class InputHandler {
 	private ObservableList <Person> person_data = null;
 	private ObservableList <Statistics> stat_data = null;
 
+	InputHandler() {}
+
 	/**
 	 * Read CSV file into person_data
-	 * @param file
-	 * @return boolean: if file is valid then True, otherwise False
+	 * @param file a File object packing the CSV file to be read
+	 * @return a boolean, if file is valid then True, otherwise False
 	 */
 	public boolean load_input(File file) {
 		CSVReader reader = null;
@@ -58,7 +59,7 @@ public class InputHandler {
 	
 	/**
 	 * Validate data by checking type and range
-	 * @return boolean: if the data is valid then True, otherwise False
+	 * @return a boolean, if the data is valid then True, otherwise False
 	 */
 	public boolean validate_data() {
 		try {
@@ -147,8 +148,9 @@ public class InputHandler {
 
 	/**
 	 * Display tables of student info and statistics
-	 * @param path: absolute path of the source CSV file
+	 * @param path absolute path of the source CSV file
 	 */
+	@SuppressWarnings("unchecked")
 	public void display_results(String path) {
 		// Create table for student info
 		if (stage_person == null) stage_person = new Stage();
@@ -285,7 +287,7 @@ public class InputHandler {
 
 	/**
 	 * Prompt window showing error message
-	 * @param type: type of the error
+	 * @param type type of the error
 	 */
 	public void display_error(int type) {
 		if (type != 0 && type != 1 && type != 2) return;
@@ -319,9 +321,9 @@ public class InputHandler {
 
 	/**
 	 * Read CSV and generate statistics
-	 * @param file: if not null, then open corresponding file; 
-	 * 				otherwise, prompt file dialog
-	 * @return boolean: if file/info is invalid, then False; otherwise, True
+	 * @param file if not null, then open corresponding file; 
+	 * 			   otherwise, prompt file dialog.
+	 * @return a boolean, if file/info is invalid, then False; otherwise, True
 	 */
 	public boolean launch(File file) {
 		if (stage_person != null) stage_person.hide();
@@ -353,24 +355,28 @@ public class InputHandler {
 
 	/**
 	 * Helper function to return students' info
-	 * @return ObservableList person_data
+	 * @return a ObservableList, person_data
 	 */
 	public ObservableList <Person> getPersondata() { return person_data; }
 
 	/**
 	 * Helper function to return students' statistics
-	 * @return ObservableList stat_data
+	 * @return a ObservableList, stat_data
 	 */
 	public ObservableList <Statistics> getStatdata() { return stat_data; }
 
 	/**
-	 * Helper class for creating row index
+	 * Helper class for creating row index.
+	 * CellFactory type class for using JavaFX CellValueFactory.
 	 * @author SHU Tian
-	 *
 	 * @param <S> type of source object
 	 * @param <T> type of display object
 	 */
 	public class RowIndexCellFactory <S, T> implements Callback <TableColumn <S, T>, TableCell <S, T>> {
+		RowIndexCellFactory () {}
+		/**
+		 * Override JavaFX TableCell to generate a column of cells with row indices
+		 */
 		@Override public TableCell <S, T> call(TableColumn <S, T> param) {
 			TableCell <S, T> ret = new TableCell <S, T> () {
 				@Override protected void updateItem(T item, boolean empty) {
