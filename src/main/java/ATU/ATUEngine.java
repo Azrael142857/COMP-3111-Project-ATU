@@ -442,37 +442,4 @@ public class ATUEngine {
 		stage_error.show();
 	}
 	
-	//simple sample ATU algorithm 
-	public void team_up() {
-		person_data.sort(Comparator.comparing( Person::getIntegerK1energy ).reversed() );
-		int team_id = 1;
-		for(Person person : person_data) {
-			person.setGroupNumber(Integer.toString(team_id));
-			team_id++;
-			if(team_id>team_size) {
-				if( Integer.valueOf(person.getK1energy())<K1_mean ) 
-					display(1, "WARNNIG: Not enough students have K1_energy greater or equals to Average_K1_energy");
-				break;
-			}
-		}
-		
-		person_data.sort(Comparator.comparing( Person::getIntegerK2energy ) );
-		team_id = 1;
-		for(Person person : person_data) {
-			if( !person.getGroupNumber().equals("N/A") ) continue;
-			
-			person.setGroupNumber(Integer.toString(team_id));
-			team_id++;
-			if(team_id>team_size) break;
-		}
-		
-		team_id = 1;
-		for(Person person : person_data) {
-			if( !person.getGroupNumber().equals("N/A") ) continue;
-			
-			person.setGroupNumber(Integer.toString(team_id));
-			team_id++;
-			if(team_id>team_size) team_id=1;
-		}
-	}
 }
