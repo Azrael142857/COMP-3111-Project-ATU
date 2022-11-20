@@ -118,17 +118,18 @@ public class InquiryHandler {
 			find_team_info();
 			//display team info in a new window
 			display_results();
+			return true;
 		}	
 		
-		return true;
+		return false;
 	}
 	
+
 	/**
 	 * Prompt window showing error message
 	 * @param message the message to be shown on the error window
 	 */
-	public void display(String message) {
-		
+	public void display(String message) {		
 		Stage stage_error = new Stage();
 		Scene scene_error = new Scene(new Group());
 		stage_error.setTitle("Error Message");
@@ -151,9 +152,12 @@ public class InquiryHandler {
 		stage_error.show();
 	}
 	
+
 	/**
 	 * Display the grouping results for the inquiry
 	 */
+	@SuppressWarnings("unchecked")
+
 	public void display_results() {
 		
 		table = new TableView<GroupingInfo>();
