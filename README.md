@@ -33,3 +33,11 @@ COMP 3111 Group Project: Automatic Teaming Up
 **Use Case Diagram:** [Link](https://viewer.diagrams.net/?tags=%7B%7D&highlight=0000ff&edit=_blank&layers=1&nav=1&title=Use%20Case%20Diagram.drawio#R3ZhLU9swEIB%2FTY4wtuyYcMwL6JQOtIEpPXVErNgaZMuV5Tz667uKpcS2QgnT4FByibSS1tK3D63d8YbJ8lLgLP7CQ8I6yAmXHW%2FUQch1vB78KcmqlAT%2BeSmIBA31pK1gQn8Ts1JLCxqSvDZRcs4kzerCKU9TMpU1GRaCL%2BrTZpzVn5rhiFiCyRQzW%2FqdhjIupT10tpVfERrF5sluoM%2BXYDNZnySPccgXFZE37nhDwbksW8lySJiCZ7iU6y6eGd1sTJBU7rMASXrzGC9vvo79SK5m%2FYs8cU%2F8Usscs0IfWG9WrgwBwYs0JEqJ0%2FEGi5hKMsnwVI0uwOYgi2XCoOdC096U3uecCEmWFZHe5CXhCZFiBVPMaE9vSnsMOtMAF1v%2Bnh%2BUsrjCHgV6ItY2jza6t1igocm8glLXojSRRaiO2IQFRs5Us0hYfyq5ACTq5BQc6ho%2FEnbLcyopT2HKI5eSJ5UJfUYjNSB5AyovJKMpGW5c3DkQaeOamrTn7iDt2KDfjHPP4jzkhcgJyD6luRTFGul%2FzTxw6sz9YzM%2Ft5j37%2B5BMFnlkiQWbDimrJMCu%2FAnAMUU%2BVHKU5g5mFHGGiKsUU8BHhE7bJDQMFSP2Zlj6lnoAIZATUOc24YIdhjCeytDGEeoWOIb%2BVWQHLKMcwnnz9ZhMOMCrhblzk3TwDPgVnwO4GGT9AaDSR3drkXPddv0Y9e18NmE0rCvagLo8YyAzw1AckGZAQM9XYG4qI5sT%2FfLIV1Nycs3icQiInIPZyBhrTyx7VHlbdgKwsBD5vUKZhdwre6WU3WVGdt6%2FjO2NSrKU%2BpV1YqjoajrvKCoxGApWtt%2Fc8Z%2FcAm7utlG1EzdJM5EAqkc0hC0hzEW9o3eZlR5vUZO8uyc5DqtRpVd%2BlxzHK4zUVYojiMscU7eFzfUOzq3s%2FayEXATq4fNIuj8UCOnXdMdLaszR6uXstjL2ck%2FXnayCii%2FYcN9s1Pg1hV1ey1nJ7va%2FUgu0v0ALrKpCY0ip10XQXZJeEuEqgBBeEew%2BrvP1hCBIXLKyn2cRvDmctyEHOxRHqI2EzJqsTxsP9rQEcvFHdF26lR%2BDYV7x17jTvd63b%2BpPVwkPj34V87TCQ5mZ2gep%2FLz0P95YnvP%2FfqzxBCv%2F0YUR2IdjmVZ2S8kV29pUx2nNI1MqL7r9%2BoZT6Vx8QD6TH0%2FGXAREmGeGpIZLpg80BeoRp5Avl24%2BbsKN%2FT6PAHd7cfW0i%2B2n6y98R8%3D)
 
 **Use Case Specification:** [Link](https://docs.google.com/document/d/1znwGcRs2XSLQrF1CjfeukCDh8R51am5i/edit)
+
+**JavaDoc Documentation:** [Link](https://github.com/Azrael142857/COMP-3111-Project-ATU/blob/master/Javadoc.pdf)
+
+**Unit Test Screenshot:** [Link](https://github.com/Azrael142857/COMP-3111-Project-ATU/blob/master/Unit%20Test%20Screenshot.png)
+
+**Jacoco Report Screenshot:** [Link](https://github.com/Azrael142857/COMP-3111-Project-ATU/blob/master/Jacoco%20Report%20Screenshot.png)
+
+**Activity 2 Report:** [Link](https://docs.google.com/document/d/1Yoe-J6eBT0N4FU2Y7ILrNFh67Z3k42XC/edit?usp=sharing&ouid=109234311385858227299&rtpof=true&sd=true)
