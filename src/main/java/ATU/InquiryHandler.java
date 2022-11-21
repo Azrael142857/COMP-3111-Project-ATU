@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 
 /**
 * 
-* The InquiryHandle class handles inquiries from students, 
+* The InquiryHandler class handles inquiries from students, 
 * and it takes studentID or student name as a key, 
 * and outputs his/her grouping information
 * 

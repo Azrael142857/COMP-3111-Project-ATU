@@ -19,19 +19,19 @@ import javafx.stage.Stage;
 
 
 /**
-* @author ZHANG Juntao
 * This class contains methods for manipulating an Person type ObservableList. 
 * This class teams up the Person type objects in ObservableList 
 * by setting the groupNumber attribute through Person::setGroupNumber method.
 * <p>
-* The team up process follows the following priorities:
-*  (1) Each team has at least one member with Person::k1energy greater or equals to the average K1_energy over the entire ObservableList.
-*  (2) The sum of variance of average Person::k1energy and Person::k2energy among groups should be close to the possible minimum value.
-*  (3) The distribution of "1" in Person::k3tick1 and Person::k3tick2 should be even.
+* The team up process follows the following priorities:<br/>
+*  (1) Each team has at least one member with Person::k1energy greater or equals to the average K1_energy over the entire ObservableList.<br/>
+*  (2) The sum of variance of average Person::k1energy and Person::k2energy among groups should be close to the possible minimum value.<br/>
+*  (3) The distribution of "1" in Person::k3tick1 and Person::k3tick2 should be even.<br/>
 *  (4) The distribution of "1" in Person::myPefernce should be even.
 * 
-* @see         Person
-* @see		   ObservableList
+* @author 		ZHANG Juntao
+* @see        	Person
+* @see		  	ObservableList
 */
 public class ATUEngine {
 	private ObservableList <Person> person_data = null;
@@ -108,26 +108,12 @@ public class ATUEngine {
 	}
 
 	/**
-	 * calculate size, K1_mean, and K2_mean
-	 */
-	private void calculate_statistics() {
-		student_size = person_data.size();
-		team_size = student_size / 3; //integer division: floor
-		for(Person person : person_data) {
-			K1_mean += person.getIntegerK1energy();
-			K2_mean += person.getIntegerK2energy();
-		}
-		K1_mean /= student_size;
-		K2_mean /= student_size;
-	}
-
-	/**
 	 * Clustering the remaining Points to the 2nd and 3rd cluster, 
 	 * so that the 3rd Cluster has low intra-cluster L2 distances (i.e., the 3rd cluster have Points close to the mean).
-	 * Centroid Clustering is applied to the remaining Points.
+	 * <br/>Centroid Clustering is applied to the remaining Points.
 	 * @param studentid_to_Cluster	A hashMap maps student_id to the Cluster he/she belongs to.
 	 */
-	private void clusterRest(HashMap<String, Integer> studentid_to_Cluster) {
+	public void clusterRest(HashMap<String, Integer> studentid_to_Cluster) {
 		ArrayList <Cluster> clusterList = new ArrayList <Cluster>();
 		
 		//create cluster for each point
@@ -169,36 +155,7 @@ public class ATUEngine {
 	}
 	
 	/**
-	 * After all Points are divided into 3 clusters (i.e., all student_id exist in studentid_to_Cluster's key set)
-	 * Calculated the mean Point of the 3 Clusters. 
-	 * @param cluster1_mean 		mean Point of the 1st Cluster to be calculated.
-	 * @param cluster2_mean 		mean Point of the 2nd Cluster to be calculated.
-	 * @param studentid_to_Cluster 	A hashMap maps student_id to the Cluster he/she belongs to.
-	 */
-	private void initializeClusterMean(Point cluster1_mean, Point cluster2_mean, HashMap<String, Integer> studentid_to_Cluster) {
-		int cluster1_size=0, cluster2_size=0;
-		for(Person person : person_data) {
-			String id = person.getStudentid();
-			int clusterBelong = studentid_to_Cluster.get(id);
-			int pK1 = person.getIntegerK1energy(), pK2 = person.getIntegerK2energy();
-			
-			if(clusterBelong==1) {
-				cluster1_mean.K1 = cluster1_mean.K1*cluster1_size/(cluster1_size+1) + pK1/(cluster1_size+1);
-				cluster1_mean.K2 = cluster1_mean.K2*cluster1_size/(cluster1_size+1) + pK2/(cluster1_size+1);
-				cluster1_size++;
-			} 
-			else if(clusterBelong==2) {
-				cluster2_mean.K1 = cluster2_mean.K1*cluster2_size/(cluster2_size+1) + pK1/(cluster2_size+1);
-				cluster2_mean.K2 = cluster2_mean.K2*cluster2_size/(cluster2_size+1) + pK2/(cluster2_size+1);
-				cluster2_size++;
-			} 
-		}
-		cluster2_mean.K1 += cluster1_mean.K1;
-		cluster2_mean.K2 += cluster1_mean.K2;
-	}
-	
-	/**
-	 * Greedily assign Person in designated Cluster to each groups so that the resulted sum of K1, K2 energy is close to target_mean.
+	 * Greedily assign Person in designated Cluster to each groups so that the resulted sum of K1, K2 energy is close to target_mean.<br/>
 	 * Group further from original_mean will be assigned first.
 	 * 
 	 * @param groupList 			Array of Points indicate the Group's (K1, K2) position,
@@ -207,7 +164,7 @@ public class ATUEngine {
 	 * @param target_mean			Average (K1, K2) point of Groups after the assignment of Person.
 	 * @param studentid_to_Cluster	A hashMap maps student_id to the Cluster he/she belongs to.
 	 */
-	private void greedyAssign(ArrayList<Point> groupList, int cluster, Point original_mean, Point target_mean, HashMap<String, Integer> studentid_to_Cluster) {
+	public void greedyAssign(ArrayList<Point> groupList, int cluster, Point original_mean, Point target_mean, HashMap<String, Integer> studentid_to_Cluster) {
 		for(Point group : groupList) 
 			group.setDist( group.getL2Distance(original_mean) );
 		
@@ -241,10 +198,10 @@ public class ATUEngine {
 
 	/**
 	 * The caller function of a sequence of functions to manipulate ATUEgine::person_data.
-	 * After this, all Person in ATUEngine::person_data should be assigned to a group.
+	 * After this, all Person in ATUEngine::person_data should be assigned to a group.<br/>
 	 * This method gives a preliminary grouping result.
 	 */
-	private void autoTeamUp() {
+	public void autoTeamUp() {
 		
 		//choose 1st member
 		person_data.sort(Comparator.comparing( Person::getIntegerK1energy ).reversed() );
@@ -305,7 +262,7 @@ public class ATUEngine {
 	 * @param groupList			Array of points indicating current groups's (K1, K2).
 	 * @return					True if swap is performed, else false.
 	 */
-	private boolean tryAndSwap(Person p1, Person p2, float loss_tolerance, ArrayList<Point> groupList) {
+	public boolean tryAndSwap(Person p1, Person p2, float loss_tolerance, ArrayList<Point> groupList) {
 		int groupNumber1 = p1.getIntegerGroupNumber();
 		int groupNumber2 = p2.getIntegerGroupNumber();
 		if( groupNumber1 == groupNumber2 ) return false;
@@ -347,14 +304,14 @@ public class ATUEngine {
 	}
 	
 	/**
-	 * Adjust the team assignment so that:
-	 * When (1) Each team has at least one member with Person::k1energy greater or equals to the average K1_energy over the entire ObservableList.
-	 *  (2) The sum of variance of average Person::k1energy and Person::k2energy among groups should be close to the possible minimum value.
-	 *  (3) The distribution of "1" in Person::k3tick1 and Person::k3tick2 should be even.
-	 *  (4) The distribution of "1" in Person::myPefernce should be even.
+	 * Adjust the team assignment so that:<br/>
+	 * When (1) Each team has at least one member with Person::k1energy greater or equals to the average K1_energy over the entire ObservableList.<br/>
+	 *  (2) The sum of variance of average Person::k1energy and Person::k2energy among groups should be close to the possible minimum value.<br/>
+	 *  (3) The distribution of "1" in Person::k3tick1 and Person::k3tick2 should be even.<br/>
+	 *  (4) The distribution of "1" in Person::myPefernce should be even.<br/>
 	 *  This method gives a final grouping result.
 	 */
-	private void adjust() {
+	public void adjust() {
 		person_data.sort(Comparator.comparing( Person::getIntegerGroupNumber ) );
 		
 		ArrayList <Point> groupList = new ArrayList<Point>();
@@ -440,9 +397,52 @@ public class ATUEngine {
 	}
 
 	/**
+	 * calculate size, K1_mean, and K2_mean
+	 */
+	private void calculate_statistics() {
+		student_size = person_data.size();
+		team_size = student_size / 3; //integer division: floor
+		for(Person person : person_data) {
+			K1_mean += person.getIntegerK1energy();
+			K2_mean += person.getIntegerK2energy();
+		}
+		K1_mean /= student_size;
+		K2_mean /= student_size;
+	}
+
+	/**
+	 * After all Points are divided into 3 clusters (i.e., all student_id exist in studentid_to_Cluster's key set)
+	 * <br/>Calculated the mean Point of the 3 Clusters. 
+	 * @param cluster1_mean 		mean Point of the 1st Cluster to be calculated.
+	 * @param cluster2_mean 		mean Point of the 2nd Cluster to be calculated.
+	 * @param studentid_to_Cluster 	A hashMap maps student_id to the Cluster he/she belongs to.
+	 */
+	private void initializeClusterMean(Point cluster1_mean, Point cluster2_mean, HashMap<String, Integer> studentid_to_Cluster) {
+		int cluster1_size=0, cluster2_size=0;
+		for(Person person : person_data) {
+			String id = person.getStudentid();
+			int clusterBelong = studentid_to_Cluster.get(id);
+			int pK1 = person.getIntegerK1energy(), pK2 = person.getIntegerK2energy();
+			
+			if(clusterBelong==1) {
+				cluster1_mean.K1 = cluster1_mean.K1*cluster1_size/(cluster1_size+1) + pK1/(cluster1_size+1);
+				cluster1_mean.K2 = cluster1_mean.K2*cluster1_size/(cluster1_size+1) + pK2/(cluster1_size+1);
+				cluster1_size++;
+			} 
+			else if(clusterBelong==2) {
+				cluster2_mean.K1 = cluster2_mean.K1*cluster2_size/(cluster2_size+1) + pK1/(cluster2_size+1);
+				cluster2_mean.K2 = cluster2_mean.K2*cluster2_size/(cluster2_size+1) + pK2/(cluster2_size+1);
+				cluster2_size++;
+			} 
+		}
+		cluster2_mean.K1 += cluster1_mean.K1;
+		cluster2_mean.K2 += cluster1_mean.K2;
+	}
+
+	/**
 	 * A private class that represents a Point on a Cartesian coordinate. 
-	 * It has public properties to directly access and manipulate.
-	 * Point::K1, Point::K2 are 1st and 2nd coordinate of the point.
+	 * It has public properties to directly access and manipulate.<br/>
+	 * Point::K1, Point::K2 are 1st and 2nd coordinate of the point.<br/>
 	 * Point::id, Point::dist are properties to store information.
 	 * 
 	 * @author ZHANG Juntao
@@ -481,9 +481,9 @@ public class ATUEngine {
 
 	/**
 	 * A private class that represents a Cluster of Point objects. 
-	 * It has public properties to directly access and manipulate.
-	 * Cluster::pointList An Observable List of Point Object in the Cluster.
-	 * Cluster::K1_mean, Cluster::K2_mean are 1st and 2nd coordinate of the mean point.
+	 * It has public properties to directly access and manipulate.<br/>
+	 * Cluster::pointList An Observable List of Point Object in the Cluster.<br/>
+	 * Cluster::K1_mean, Cluster::K2_mean are 1st and 2nd coordinate of the mean point.<br/>
 	 * Cluster::size is number of Point object in the Cluster.
 	 * 
 	 * @author 	ZHANG Juntao
