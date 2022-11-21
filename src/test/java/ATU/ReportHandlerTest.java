@@ -23,6 +23,7 @@ public class ReportHandlerTest {
 		try {
 			ATUEngine processor = new ATUEngine(vaild_inputer.getPersondata());
 			ReportHandler handler = new ReportHandler(vaild_inputer.getPersondata());
+			ReportHandler invalid_handler = new ReportHandler(null);
 				
 			Thread thread = new Thread(new Runnable() {
 				@Override public void run() {
@@ -30,7 +31,10 @@ public class ReportHandlerTest {
 					new JFXPanel();
 					Platform.runLater(new Runnable() {
 						@Override public void run() {
+							handler.hideReport();
 							assertTrue( processor.launch() );
+							assertTrue( handler.launch());
+							handler.hideReport();
 							assertTrue( handler.launch());
 						}
 					});

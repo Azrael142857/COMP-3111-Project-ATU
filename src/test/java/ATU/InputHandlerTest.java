@@ -56,6 +56,7 @@ public class InputHandlerTest {
 							assertTrue(input_handler.launch(valid[0]));
 							assertFalse(input_handler.launch(invalid_csv[0]));
 							assertFalse(input_handler.launch(invalid_data[0]));
+							assertTrue(input_handler.launch(valid[1]));
 						}
 					});
 				}
