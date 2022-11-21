@@ -20,7 +20,7 @@ public class InquiryHandlerTest {
 	
 	@Test public void test_launch() {
 		try {
-			ATUEngine processor = new ATUEngine(vaild_inputer.getPersondata(), vaild_inputer.getStatdata());
+			ATUEngine processor = new ATUEngine(vaild_inputer.getPersondata());
 			InquiryHandler handler1 = new InquiryHandler(vaild_inputer.getPersondata(), "20004488");
 			InquiryHandler handler2 = new InquiryHandler(vaild_inputer.getPersondata(), "20603796");
 			InquiryHandler handler3 = new InquiryHandler(vaild_inputer.getPersondata(), "20000000");
