@@ -34,10 +34,10 @@ COMP 3111 Group Project: Automatic Teaming Up
 
 **Use Case Specification:** [Link](https://docs.google.com/document/d/1znwGcRs2XSLQrF1CjfeukCDh8R51am5i/edit)
 
-**JavaDoc Documentation:** [Link](https://github.com/Azrael142857/COMP-3111-Project-ATU/blob/master/Javadoc.pdf)
+**JavaDoc Documentation:** [Link1](https://drive.google.com/file/d/1kYKpB9eIsq3CgWdFOojiLuL5Y7QtDTeR/view?usp=sharing) [Link2](https://github.com/Azrael142857/COMP-3111-Project-ATU/blob/master/Javadoc.pdf)
 
 **Unit Test Screenshot:** [Link](https://github.com/Azrael142857/COMP-3111-Project-ATU/blob/master/Unit%20Test%20Screenshot.png)
 
 **Jacoco Report Screenshot:** [Link](https://github.com/Azrael142857/COMP-3111-Project-ATU/blob/master/Jacoco%20Report%20Screenshot.png)
 
-**Activity 2 Report:** [Link](https://docs.google.com/document/d/1Yoe-J6eBT0N4FU2Y7ILrNFh67Z3k42XC/edit?usp=sharing&ouid=109234311385858227299&rtpof=true&sd=true)
+**Activity 2 Report:** [Link](https://drive.google.com/file/d/1kYKpB9eIsq3CgWdFOojiLuL5Y7QtDTeR/view?usp=sharing)
