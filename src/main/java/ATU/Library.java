@@ -1,5 +1,7 @@
 package ATU;
-
+/**
+ * Main class initiate the whole program.
+ */
 public class Library {
 	/**
 	 * Initiate UIApplication and start the program

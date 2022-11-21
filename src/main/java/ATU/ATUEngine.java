@@ -19,19 +19,19 @@ import javafx.stage.Stage;
 
 
 /**
-* @author ZHANG Juntao
 * This class contains methods for manipulating an Person type ObservableList. 
 * This class teams up the Person type objects in ObservableList 
 * by setting the groupNumber attribute through Person::setGroupNumber method.
 * <p>
-* The team up process follows the following priorities:
-*  (1) Each team has at least one member with Person::k1energy greater or equals to the average K1_energy over the entire ObservableList.
-*  (2) The sum of variance of average Person::k1energy and Person::k2energy among groups should be close to the possible minimum value.
-*  (3) The distribution of "1" in Person::k3tick1 and Person::k3tick2 should be even.
+* The team up process follows the following priorities:<br/>
+*  (1) Each team has at least one member with Person::k1energy greater or equals to the average K1_energy over the entire ObservableList.<br/>
+*  (2) The sum of variance of average Person::k1energy and Person::k2energy among groups should be close to the possible minimum value.<br/>
+*  (3) The distribution of "1" in Person::k3tick1 and Person::k3tick2 should be even.<br/>
 *  (4) The distribution of "1" in Person::myPefernce should be even.
 * 
-* @see         Person
-* @see		   ObservableList
+* @author 		ZHANG Juntao
+* @see        	Person
+* @see		  	ObservableList
 */
 public class ATUEngine {
 	private ObservableList <Person> person_data = null;
@@ -124,7 +124,7 @@ public class ATUEngine {
 	/**
 	 * Clustering the remaining Points to the 2nd and 3rd cluster, 
 	 * so that the 3rd Cluster has low intra-cluster L2 distances (i.e., the 3rd cluster have Points close to the mean).
-	 * Centroid Clustering is applied to the remaining Points.
+	 * <br/>Centroid Clustering is applied to the remaining Points.
 	 * @param studentid_to_Cluster	A hashMap maps student_id to the Cluster he/she belongs to.
 	 */
 	private void clusterRest(HashMap<String, Integer> studentid_to_Cluster) {
@@ -170,7 +170,7 @@ public class ATUEngine {
 	
 	/**
 	 * After all Points are divided into 3 clusters (i.e., all student_id exist in studentid_to_Cluster's key set)
-	 * Calculated the mean Point of the 3 Clusters. 
+	 * <br/>Calculated the mean Point of the 3 Clusters. 
 	 * @param cluster1_mean 		mean Point of the 1st Cluster to be calculated.
 	 * @param cluster2_mean 		mean Point of the 2nd Cluster to be calculated.
 	 * @param studentid_to_Cluster 	A hashMap maps student_id to the Cluster he/she belongs to.
@@ -198,7 +198,7 @@ public class ATUEngine {
 	}
 	
 	/**
-	 * Greedily assign Person in designated Cluster to each groups so that the resulted sum of K1, K2 energy is close to target_mean.
+	 * Greedily assign Person in designated Cluster to each groups so that the resulted sum of K1, K2 energy is close to target_mean.<br/>
 	 * Group further from original_mean will be assigned first.
 	 * 
 	 * @param groupList 			Array of Points indicate the Group's (K1, K2) position,
@@ -241,7 +241,7 @@ public class ATUEngine {
 
 	/**
 	 * The caller function of a sequence of functions to manipulate ATUEgine::person_data.
-	 * After this, all Person in ATUEngine::person_data should be assigned to a group.
+	 * After this, all Person in ATUEngine::person_data should be assigned to a group.<br/>
 	 * This method gives a preliminary grouping result.
 	 */
 	private void autoTeamUp() {
@@ -348,10 +348,10 @@ public class ATUEngine {
 	
 	/**
 	 * Adjust the team assignment so that:
-	 * When (1) Each team has at least one member with Person::k1energy greater or equals to the average K1_energy over the entire ObservableList.
-	 *  (2) The sum of variance of average Person::k1energy and Person::k2energy among groups should be close to the possible minimum value.
-	 *  (3) The distribution of "1" in Person::k3tick1 and Person::k3tick2 should be even.
-	 *  (4) The distribution of "1" in Person::myPefernce should be even.
+	 * When (1) Each team has at least one member with Person::k1energy greater or equals to the average K1_energy over the entire ObservableList.<br/>
+	 *  (2) The sum of variance of average Person::k1energy and Person::k2energy among groups should be close to the possible minimum value.<br/>
+	 *  (3) The distribution of "1" in Person::k3tick1 and Person::k3tick2 should be even.<br/>
+	 *  (4) The distribution of "1" in Person::myPefernce should be even.<br/>
 	 *  This method gives a final grouping result.
 	 */
 	private void adjust() {
@@ -441,8 +441,8 @@ public class ATUEngine {
 
 	/**
 	 * A private class that represents a Point on a Cartesian coordinate. 
-	 * It has public properties to directly access and manipulate.
-	 * Point::K1, Point::K2 are 1st and 2nd coordinate of the point.
+	 * It has public properties to directly access and manipulate.<br/>
+	 * Point::K1, Point::K2 are 1st and 2nd coordinate of the point.<br/>
 	 * Point::id, Point::dist are properties to store information.
 	 * 
 	 * @author ZHANG Juntao
@@ -481,9 +481,9 @@ public class ATUEngine {
 
 	/**
 	 * A private class that represents a Cluster of Point objects. 
-	 * It has public properties to directly access and manipulate.
-	 * Cluster::pointList An Observable List of Point Object in the Cluster.
-	 * Cluster::K1_mean, Cluster::K2_mean are 1st and 2nd coordinate of the mean point.
+	 * It has public properties to directly access and manipulate.<br/>
+	 * Cluster::pointList An Observable List of Point Object in the Cluster.<br/>
+	 * Cluster::K1_mean, Cluster::K2_mean are 1st and 2nd coordinate of the mean point.<br/>
 	 * Cluster::size is number of Point object in the Cluster.
 	 * 
 	 * @author 	ZHANG Juntao
