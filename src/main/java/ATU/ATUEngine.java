@@ -17,23 +17,100 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
+
+/**
+* @author ZHANG Juntao
+* This class contains methods for manipulating an Person type ObservableList. 
+* This class teams up the Person type objects in ObservableList 
+* by setting the groupNumber attribute through Person::setGroupNumber method.
+* <p>
+* The team up process follows the following priorities:
+*  (1) Each team has at least one member with Person::k1energy greater or equals to the average K1_energy over the entire ObservableList.
+*  (2) The sum of variance of average Person::k1energy and Person::k2energy among groups should be close to the possible minimum value.
+*  (3) The distribution of "1" in Person::k3tick1 and Person::k3tick2 should be even.
+*  (4) The distribution of "1" in Person::myPefernce should be even.
+* 
+* @see         Person
+* @see		   ObservableList
+*/
 public class ATUEngine {
 	private ObservableList <Person> person_data = null;
-	private ObservableList <Statistics> stat_data = null;
-	int student_size;
-	int team_size;
+	private int student_size;
+	private int team_size;
 	private float K1_mean = 0;
 	private float K2_mean = 0;
 	
-	// Constructor: get the input data
-	public ATUEngine(ObservableList <Person> person_data, ObservableList <Statistics> stat_data) {
+	/**
+	 * Construct ATUEngine object and pass the ObservableList it needs to manipulate.
+	 *
+	 * @param person_data  	an Person type ObservableList that needs to be manipulate.
+	 */
+	public ATUEngine(ObservableList <Person> person_data) {
 		this.person_data = person_data;
-		this.stat_data = stat_data;
-
 	}
 	
-	//calculate size, K1_mean, and K2_mean
-	public void calculate_statistics() {
+	/**
+	 * The interface for starting the Automatic Teaming Up process.
+	 * Person objects in the ObservableList will be manipulated upon calling this method.
+	 *
+	 * @return True if the manipulation is successful, else false.
+	 */
+	public boolean launch() {
+		//set all person::groupNumber to "N/A"
+		for(Person person : person_data) person.setGroupNumber("N/A");
+		
+		//calculate size, K1_mean, and K2_mean
+		calculate_statistics();
+		
+		//apply ATU algorithm 
+		autoTeamUp();
+		adjust();
+		
+		//sort the person_data array by group number
+		person_data.sort(Comparator.comparing( Person::getIntegerGroupNumber ) );
+		
+		//Return True if the ATU Engine runs successfully
+		display(2, "ATU Engine ran successfully!");
+		return true;
+	}
+
+	/**
+	 * Prompt window showing error, warning, or notice message.
+	 * 
+	 * @param type 		Message type. 0 for Error, 1 for Warning, 2 for notice
+	 * @param message 	A string that describes the message to be shown in the prompt window.
+	 */
+	public void display(int type, String message) {
+		if( type!=0 && type!=1 && type!=2 ) return; //0 for Error, 1 for Warning, 2 for notice
+		
+		Stage stage_error = new Stage();
+		Scene scene_error = new Scene(new Group());
+		if(type==0) stage_error.setTitle("Error Message");
+		if(type==1) stage_error.setTitle("Warning Message");
+		if(type==2) stage_error.setTitle("Notice");
+		stage_error.setWidth(400);
+		stage_error.setHeight(80);
+		stage_error.setResizable(false);
+		
+		final Label label_error = new Label();
+		label_error.setText(message);
+		label_error.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		
+		final VBox vbox_error = new VBox();
+		vbox_error.setSpacing(5);
+		vbox_error.setPadding(new Insets(10, 0, 0, 10));
+		vbox_error.getChildren().addAll(label_error);
+		
+		((Group)scene_error.getRoot()).getChildren().addAll(vbox_error);
+		
+		stage_error.setScene(scene_error);
+		stage_error.show();
+	}
+
+	/**
+	 * calculate size, K1_mean, and K2_mean
+	 */
+	private void calculate_statistics() {
 		student_size = person_data.size();
 		team_size = student_size / 3; //integer division: floor
 		for(Person person : person_data) {
@@ -43,66 +120,13 @@ public class ATUEngine {
 		K1_mean /= student_size;
 		K2_mean /= student_size;
 	}
-	
-	//Clustering the 2nd and 3rd class
-	//Class Point are used only in clusterRest() function
-	//L2 distance is used
-	//Centroid Clustering is used  
-	private class Point {
-		public String id;
-		public float K1, K2;
-		private float dist;
-		
-		public Point( float K1, float K2, String id) {
-			this.K1 = K1;
-			this.K2 = K2;
-			this.id = id;
-		}
-		public Point( int K1, int K2, String id) {
-			this.K1 = K1;
-			this.K2 = K2;
-			this.id = id;
-		}
-		
-		public float getL2Distance(Point anotherPoint) {
-			return (K1-anotherPoint.K1)*(K1-anotherPoint.K1) + (K2-anotherPoint.K2)*(K2-anotherPoint.K2);
-		}
-		
-		public float getDist() {return dist;}
-		public void setDist(float dist) {this.dist = dist;}
-	}
-	
-	private class Cluster {
-		public ArrayList<Point> pointList;
-		public float K1_mean, K2_mean;
-		public int size;
-		
-		public Cluster(Person person) {
-			pointList = new ArrayList<Point>();
-			size = 0;
-			
-			addPoint( person.getIntegerK1energy(), person.getIntegerK2energy(), person.getStudentid() );
-		}
-		
-		public void addPoint(float pK1, float pK2, String id) {
-			pointList.add( new Point(pK1, pK2, id) );
-			K1_mean = K1_mean*size/(size+1) + pK1/(size+1);
-			K2_mean = K2_mean*size/(size+1) + pK2/(size+1);
-			size++;
-		}
-		
-		public float getCenterDistance(Cluster anotherCluster) {
-			return (K1_mean-anotherCluster.K1_mean)*(K1_mean-anotherCluster.K1_mean)+
-					(K2_mean-anotherCluster.K2_mean)*(K2_mean-anotherCluster.K2_mean);
-		}
-		
-		public void merge(Cluster anotherCluster) {
-			for(Point point : anotherCluster.pointList) 
-				addPoint(point.K1, point.K2, point.id);
-			
-		}
-	}
-	
+
+	/**
+	 * Clustering the remaining Points to the 2nd and 3rd cluster, 
+	 * so that the 3rd Cluster has low intra-cluster L2 distances (i.e., the 3rd cluster have Points close to the mean).
+	 * Centroid Clustering is applied to the remaining Points.
+	 * @param studentid_to_Cluster	A hashMap maps student_id to the Cluster he/she belongs to.
+	 */
 	private void clusterRest(HashMap<String, Integer> studentid_to_Cluster) {
 		ArrayList <Cluster> clusterList = new ArrayList <Cluster>();
 		
@@ -125,16 +149,7 @@ public class ATUEngine {
 						minimum_dist = dist;
 					}	
 				}
-			//merge Clusters
-			//System.out.println("HERE");
-			//System.out.println(mergeCluster1);
-			//System.out.println(mergeCluster2);
-			//System.out.println("-------------------");
-			//for(int ind1=0; ind1<clusterList.size(); ind1++) 
-			//	System.out.println("Cluster "+ Integer.toString(ind1)+
-			//			"  size="+ Integer.toString(clusterList.get(ind1).size)+ 
-			//			"  mean is ("+ Float.toString(clusterList.get(ind1).K1_mean)+ ", "+ Float.toString(clusterList.get(ind1).K2_mean));
-			
+
 			clusterList.get(mergeCluster1).merge( clusterList.get(mergeCluster2) );
 			clusterList.remove(mergeCluster2);
 			
@@ -153,6 +168,13 @@ public class ATUEngine {
 				studentid_to_Cluster.put( person.getStudentid(), 2 );
 	}
 	
+	/**
+	 * After all Points are divided into 3 clusters (i.e., all student_id exist in studentid_to_Cluster's key set)
+	 * Calculated the mean Point of the 3 Clusters. 
+	 * @param cluster1_mean 		mean Point of the 1st Cluster to be calculated.
+	 * @param cluster2_mean 		mean Point of the 2nd Cluster to be calculated.
+	 * @param studentid_to_Cluster 	A hashMap maps student_id to the Cluster he/she belongs to.
+	 */
 	private void initializeClusterMean(Point cluster1_mean, Point cluster2_mean, HashMap<String, Integer> studentid_to_Cluster) {
 		int cluster1_size=0, cluster2_size=0;
 		for(Person person : person_data) {
@@ -175,6 +197,16 @@ public class ATUEngine {
 		cluster2_mean.K2 += cluster1_mean.K2;
 	}
 	
+	/**
+	 * Greedily assign Person in designated Cluster to each groups so that the resulted sum of K1, K2 energy is close to target_mean.
+	 * Group further from original_mean will be assigned first.
+	 * 
+	 * @param groupList 			Array of Points indicate the Group's (K1, K2) position,
+	 * @param cluster				Cluster number of the designated Cluster.
+	 * @param original_mean			Average (K1, K2) point of Groups before the assignment of Person.
+	 * @param target_mean			Average (K1, K2) point of Groups after the assignment of Person.
+	 * @param studentid_to_Cluster	A hashMap maps student_id to the Cluster he/she belongs to.
+	 */
 	private void greedyAssign(ArrayList<Point> groupList, int cluster, Point original_mean, Point target_mean, HashMap<String, Integer> studentid_to_Cluster) {
 		for(Point group : groupList) 
 			group.setDist( group.getL2Distance(original_mean) );
@@ -207,7 +239,11 @@ public class ATUEngine {
 		}
 	}
 
-		//ATU implementation
+	/**
+	 * The caller function of a sequence of functions to manipulate ATUEgine::person_data.
+	 * After this, all Person in ATUEngine::person_data should be assigned to a group.
+	 * This method gives a preliminary grouping result.
+	 */
 	private void autoTeamUp() {
 		
 		//choose 1st member
@@ -257,18 +293,18 @@ public class ATUEngine {
 				person.setGroupNumber(i);
 				i="2";
 			}
-		//greedyAssign(groupList, 2, cluster3_mean, cluster4_mean, studentid_to_Cluster);
-	
-		
-		//Iterator it = studentid_to_Cluster.entrySet().iterator(); 
-		//while(it.hasNext()) {
-		//	Map.Entry me = (Map.Entry)it.next();
-		//       System.out.println("Key is: "+me.getKey() + 
-		//      " & " + 
-		//      " value is: "+me.getValue());
-		//}
+
 	}
 	
+	/**
+	 * Swap 2 person from their groups 
+	 * if after swapping, the change of the sum of K1, K2 variance is under the specific loss_tolerance.
+	 * @param p1				Person 1.
+	 * @param p2				Person 2.
+	 * @param loss_tolerance	The specific tolerance.
+	 * @param groupList			Array of points indicating current groups's (K1, K2).
+	 * @return					True if swap is performed, else false.
+	 */
 	private boolean tryAndSwap(Person p1, Person p2, float loss_tolerance, ArrayList<Point> groupList) {
 		int groupNumber1 = p1.getIntegerGroupNumber();
 		int groupNumber2 = p2.getIntegerGroupNumber();
@@ -310,6 +346,14 @@ public class ATUEngine {
 		else return false;	
 	}
 	
+	/**
+	 * Adjust the team assignment so that:
+	 * When (1) Each team has at least one member with Person::k1energy greater or equals to the average K1_energy over the entire ObservableList.
+	 *  (2) The sum of variance of average Person::k1energy and Person::k2energy among groups should be close to the possible minimum value.
+	 *  (3) The distribution of "1" in Person::k3tick1 and Person::k3tick2 should be even.
+	 *  (4) The distribution of "1" in Person::myPefernce should be even.
+	 *  This method gives a final grouping result.
+	 */
 	private void adjust() {
 		person_data.sort(Comparator.comparing( Person::getIntegerGroupNumber ) );
 		
@@ -394,52 +438,104 @@ public class ATUEngine {
 			}
 		
 	}
-	
-	//Start the Automatic Teaming Up
-	public boolean launch() {
+
+	/**
+	 * A private class that represents a Point on a Cartesian coordinate. 
+	 * It has public properties to directly access and manipulate.
+	 * Point::K1, Point::K2 are 1st and 2nd coordinate of the point.
+	 * Point::id, Point::dist are properties to store information.
+	 * 
+	 * @author ZHANG Juntao
+	 * 
+	 */
+	private class Point {
+		public String id;
+		public float K1, K2;
+		public float dist;
 		
-		//calculate size, K1_mean, and K2_mean
-		calculate_statistics();
+		/**
+		 * Construct a Point.
+		 * 
+		 * @param K1	Value of 1st coordinate
+		 * @param K2	Value of 2nd coordinate
+		 * @param id	Value of additional String information
+		 */
+		public Point( float K1, float K2, String id) {
+			this.K1 = K1;
+			this.K2 = K2;
+			this.id = id;
+		}
 		
-		//apply ATU algorithm 
-		autoTeamUp();
-		//team_up();
-		adjust();
+		/**
+		 * Calculate the L2 distance to another Point object.
+		 * @param 	anotherPoint		Another Point object to calculate L2 distance.
+		 * @return	The L2 distance	between the two points.
+		 */
+		public float getL2Distance(Point anotherPoint) {
+			return (K1-anotherPoint.K1)*(K1-anotherPoint.K1) + (K2-anotherPoint.K2)*(K2-anotherPoint.K2);
+		}
 		
-		//sort the person_data array by group number
-		person_data.sort(Comparator.comparing( Person::getIntegerGroupNumber ) );
-		
-		//Return True if the ATU Engine runs successfully
-		display(2, "ATU Engine ran successfully!");
-		return true;
+		public float getDist() {return dist;}
+		public void setDist(float dist) {this.dist = dist;}
 	}
-	
-	// Prompt window showing error message
-	public void display(int type, String message) {
-		if( type!=0 && type!=1 && type!=2 ) return; //0 for Error, 1 for Warning, 2 for notice
+
+	/**
+	 * A private class that represents a Cluster of Point objects. 
+	 * It has public properties to directly access and manipulate.
+	 * Cluster::pointList An Observable List of Point Object in the Cluster.
+	 * Cluster::K1_mean, Cluster::K2_mean are 1st and 2nd coordinate of the mean point.
+	 * Cluster::size is number of Point object in the Cluster.
+	 * 
+	 * @author 	ZHANG Juntao
+	 * @see 	Point
+	 */
+	private class Cluster {
+		public ArrayList<Point> pointList;
+		public float K1_mean, K2_mean;
+		public int size;
 		
-		Stage stage_error = new Stage();
-		Scene scene_error = new Scene(new Group());
-		if(type==0) stage_error.setTitle("Error Message");
-		if(type==1) stage_error.setTitle("Warning Message");
-		if(type==2) stage_error.setTitle("Notice");
-		stage_error.setWidth(400);
-		stage_error.setHeight(80);
-		stage_error.setResizable(false);
+		/**
+		 * @param person	A person in the Cluster.
+		 */
+		public Cluster(Person person) {
+			pointList = new ArrayList<Point>();
+			size = 0;
+			
+			addPoint( person.getIntegerK1energy(), person.getIntegerK2energy(), person.getStudentid() );
+		}
 		
-		final Label label_error = new Label();
-		label_error.setText(message);
-		label_error.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		/**
+		 * Add a Point to the Cluster
+		 * @param pK1 value of the 1st coordinate of the adding Point.
+		 * @param pK2 value of the 1st coordinate of the adding Point.
+		 * @param id additional information describing the point.
+		 */
+		public void addPoint(float pK1, float pK2, String id) {
+			pointList.add( new Point(pK1, pK2, id) );
+			K1_mean = K1_mean*size/(size+1) + pK1/(size+1);
+			K2_mean = K2_mean*size/(size+1) + pK2/(size+1);
+			size++;
+		}
 		
-		final VBox vbox_error = new VBox();
-		vbox_error.setSpacing(5);
-		vbox_error.setPadding(new Insets(10, 0, 0, 10));
-		vbox_error.getChildren().addAll(label_error);
+		/**
+		 * Calculate the L2 distance of the centriod(mean) to the centroid of another cluster.
+		 * @param 	anotherCluster	Another Point object to calculate L2 distance.
+		 * @return 	The L2 distance	between the centroids of two Clusters.
+		 */
+		public float getCenterDistance(Cluster anotherCluster) {
+			return (K1_mean-anotherCluster.K1_mean)*(K1_mean-anotherCluster.K1_mean)+
+					(K2_mean-anotherCluster.K2_mean)*(K2_mean-anotherCluster.K2_mean);
+		}
 		
-		((Group)scene_error.getRoot()).getChildren().addAll(vbox_error);
-		
-		stage_error.setScene(scene_error);
-		stage_error.show();
+		/**
+		 * Adding all the point form anotherCluster to this object.
+		 * @param anotherCluster The other Cluster to merge.
+		 */
+		public void merge(Cluster anotherCluster) {
+			for(Point point : anotherCluster.pointList) 
+				addPoint(point.K1, point.K2, point.id);
+			
+		}
 	}
 	
 }
